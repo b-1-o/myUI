@@ -15,6 +15,7 @@
 }
 
 .home-particle {
+  contain: layout paint;
   width: min(92vw, 720px);
   height: clamp(100px, 22vw, 200px);
   margin: 0 auto 8px;
