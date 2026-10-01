@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import InfiniteMenu from '../components/InfiniteMenu'
 
@@ -55,13 +55,31 @@ const works = [
   },
 ]
 
+function useIsMobile() {
+  const [mobile, setMobile] = useState(() =>
+    typeof window !== 'undefined' ? window.matchMedia('(max-width: 640px)').matches : false
+  )
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 640px)')
+    const on = () => setMobile(mq.matches)
+    on()
+    mq.addEventListener('change', on)
+    return () => mq.removeEventListener('change', on)
+  }, [])
+  return mobile
+}
+
 export default function Works() {
   const navigate = useNavigate()
+  const mobile = useIsMobile()
   const [sheet, setSheet] = useState(null)
 
   const onAction = useCallback((item) => {
     setSheet(item)
   }, [])
+
+  // Higher scale = smaller sphere on screen = less fill-rate cost (animation intact)
+  const scale = mobile ? 1.55 : 1.35
 
   return (
     <main className="page page-works page-works--infinite">
@@ -79,7 +97,7 @@ export default function Works() {
       </header>
 
       <div className="works-infinite">
-        <InfiniteMenu items={works} scale={1.35} backgroundColor="transparent" onAction={onAction} />
+        <InfiniteMenu items={works} scale={scale} backgroundColor="transparent" onAction={onAction} />
       </div>
 
       {sheet && (
