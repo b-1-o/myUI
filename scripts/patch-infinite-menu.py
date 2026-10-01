@@ -94,6 +94,84 @@ if "imageSmoothingEnabled" not in src and "drawImage(img" in src:
         "ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high'; ctx.drawImage(img,",
     )
 
+
+# Reuse gl-matrix scratch storage inside the per-frame animation loop.
+# This keeps the visual math identical but removes dozens of short-lived
+# allocations every frame on mobile CPUs.
+if "_animPosition" not in src:
+    src = src.replace(
+        "    this.scaleFactor = scale;",
+        """    this.scaleFactor = scale;
+    this._animPosition = vec3.create();
+    this._animNegPosition = vec3.create();
+    this._animTranslation = mat4.create();
+    this._animTarget = mat4.create();
+    this._animScale = mat4.create();
+    this._animFinalTranslation = mat4.create();
+    this._animMatrix = mat4.create();
+    this._animOrigin = vec3.fromValues(0, 0, 0);
+    this._animUp = vec3.fromValues(0, 1, 0);
+    this._animFinalOffset = vec3.fromValues(0, 0, -this.SPHERE_RADIUS);
+    this._animScaleVector = vec3.create();""",
+        1,
+    )
+
+    start = src.find("  #animate(deltaTime) {")
+    end = src.find("\n  #render() {", start)
+    if start >= 0 and end > start:
+        animate = """  #animate(deltaTime) {
+    const gl = this.gl;
+    this.control.update(deltaTime, this.TARGET_FRAME_DURATION);
+
+    const orientation = this.control.orientation;
+    const positions = this.instancePositions;
+    const matrices = this.discInstances.matrices;
+    const position = this._animPosition;
+    const negPosition = this._animNegPosition;
+    const translation = this._animTranslation;
+    const target = this._animTarget;
+    const scaleMatrix = this._animScale;
+    const finalTranslation = this._animFinalTranslation;
+    const matrix = this._animMatrix;
+    const origin = this._animOrigin;
+    const up = this._animUp;
+    const finalOffset = this._animFinalOffset;
+    const scaleVector = this._animScaleVector;
+
+    mat4.fromTranslation(finalTranslation, finalOffset);
+
+    const scale = 0.25;
+    const SCALE_INTENSITY = 0.6;
+
+    for (let ndx = 0; ndx < positions.length; ndx++) {
+      const source = positions[ndx];
+      vec3.transformQuat(position, source, orientation);
+
+      const s = (Math.abs(position[2]) / this.SPHERE_RADIUS) * SCALE_INTENSITY + (1 - SCALE_INTENSITY);
+      const finalScale = s * scale;
+      scaleVector[0] = finalScale;
+      scaleVector[1] = finalScale;
+      scaleVector[2] = finalScale;
+
+      vec3.negate(negPosition, position);
+      mat4.fromTranslation(translation, negPosition);
+      mat4.targetTo(target, origin, position, up);
+      mat4.fromScaling(scaleMatrix, scaleVector);
+
+      mat4.multiply(matrix, translation, target);
+      mat4.multiply(matrix, matrix, scaleMatrix);
+      mat4.multiply(matrix, matrix, finalTranslation);
+      mat4.copy(matrices[ndx], matrix);
+    }
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.discInstances.buffer);
+    gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.discInstances.matricesArray);
+    gl.bindBuffer(gl.ARRAY_BUFFER, null);
+
+    this.smoothRotationVelocity = this.control.rotationVelocity;
+  }"""
+        src = src[:start] + animate + src[end:]
+
 p.write_text(src)
 
 css = Path("src/components/InfiniteMenu.css").read_text()
