@@ -1,11 +1,12 @@
+import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import CircularCarousel from '../components/CircularCarousel'
 import HoldButton from '../components/HoldButton'
 
 const photo = (id) =>
-  `https://images.unsplash.com/${id}?w=900&q=80&auto=format&fit=max&sat=-100`
+  `https://images.unsplash.com/${id}?w=700&q=70&auto=format&fit=max&sat=-100`
 
-const items = [
+const ALL_ITEMS = [
   { src: photo('photo-1461749280684-dccba630e2f6'), alt: 'Code on a screen', title: 'Code', subtitle: 'Craft' },
   { src: photo('photo-1516116216624-53e697fedbea'), alt: 'JavaScript', title: 'JavaScript', subtitle: 'Language' },
   { src: photo('photo-1633356122544-f134324a6cee'), alt: 'React', title: 'React', subtitle: 'UI' },
@@ -18,31 +19,63 @@ const items = [
   { src: photo('photo-1504639725590-34d0984388bd'), alt: 'Monitor', title: 'UI', subtitle: 'Polish' },
 ]
 
+function useViewport() {
+  const [vp, setVp] = useState(() => {
+    if (typeof window === 'undefined') return { mobile: false, narrow: false }
+    return {
+      mobile: window.matchMedia('(max-width: 640px)').matches,
+      narrow: window.matchMedia('(max-width: 900px)').matches,
+    }
+  })
+  useEffect(() => {
+    const mqM = window.matchMedia('(max-width: 640px)')
+    const mqN = window.matchMedia('(max-width: 900px)')
+    const update = () => setVp({ mobile: mqM.matches, narrow: mqN.matches })
+    update()
+    mqM.addEventListener('change', update)
+    mqN.addEventListener('change', update)
+    return () => {
+      mqM.removeEventListener('change', update)
+      mqN.removeEventListener('change', update)
+    }
+  }, [])
+  return vp
+}
+
 export default function Home() {
   const navigate = useNavigate()
+  const { mobile, narrow } = useViewport()
+
+  const items = useMemo(
+    () => (mobile ? ALL_ITEMS.slice(0, 6) : ALL_ITEMS),
+    [mobile]
+  )
+
+  const cardWidth = mobile ? 180 : narrow ? 240 : 320
+  const speed = mobile ? 12 : 18
 
   return (
     <main className="page page-home">
-      <div className="home-carousel">
+      <div className="home-carousel" aria-hidden={false}>
         <CircularCarousel
           items={items}
           preset="panorama"
           intro="rise"
-          cardWidth={320}
+          cardWidth={cardWidth}
           aspectRatio={0.5625}
-          speed={20}
-          captions
-          gap={6}
+          speed={speed}
+          captions={!mobile}
+          gap={mobile ? 4 : 6}
           tilt={0}
           perspective={1800}
-          momentum={0.57}
+          momentum={0.5}
           pauseOnHover={false}
           draggable={false}
           parallax={0}
-          stretch={0.38}
+          stretch={mobile ? 0.2 : 0.38}
           depthFade={0.59}
           innerShade={0.46}
-          cornerRadius={13}
+          cornerRadius={mobile ? 10 : 13}
           fadeColor="#0a0a0a"
         />
       </div>
@@ -57,14 +90,14 @@ export default function Home() {
             fillColor="#e8e8e8"
             textColor="#f5f5f5"
             fillTextColor="#0a0a0a"
-            size="lg"
+            size={mobile ? 'md' : 'lg'}
             radius={999}
             fillDirection="right"
-            holdTime={1200}
+            holdTime={mobile ? 900 : 1200}
             releaseTime={200}
             pressScale={0.97}
             wave
-            waveAmplitude={5}
+            waveAmplitude={mobile ? 3 : 5}
             glow
             resetAfter={600}
             onHold={() => navigate('/menu')}

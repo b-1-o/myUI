@@ -4,6 +4,16 @@ import OptionWheel from '../components/OptionWheel'
 
 const LINKS = [
   {
+    label: 'Home',
+    action: 'route',
+    to: '/',
+    logo: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2">
+        <path d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-5v-6H10v6H5a1 1 0 0 1-1-1v-9.5z" />
+      </svg>
+    ),
+  },
+  {
     label: 'Works',
     action: 'route',
     to: '/works',
