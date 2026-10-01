@@ -174,7 +174,9 @@ a {
   grid-template-columns: 1fr 1fr;
   grid-template-areas: 'logo wheel';
   height: 100dvh;
+  height: 100svh;
   overflow: hidden;
+  overscroll-behavior: none;
 }
 
 .menu-logo-stage {
@@ -196,6 +198,8 @@ a {
   height: 100%;
   min-height: 0;
   touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .menu-logo {
@@ -238,33 +242,36 @@ a {
   .page-menu--wheel {
     grid-template-columns: 1fr auto;
     grid-template-areas: 'wheel logo';
+    padding-bottom: env(safe-area-inset-bottom, 0px);
   }
 
   .menu-logo-stage {
-    width: min(32vw, 120px);
-    padding-right: 12px;
+    width: min(28vw, 100px);
+    padding-right: max(10px, env(safe-area-inset-right, 0px));
     justify-content: center;
   }
 
   .menu-logo {
-    gap: 10px;
+    gap: 8px;
   }
 
   .menu-logo svg {
-    width: min(18vw, 72px);
-    height: min(18vw, 72px);
+    width: min(16vw, 64px);
+    height: min(16vw, 64px);
   }
 
   .menu-logo__name {
-    font-size: 10px;
-    letter-spacing: 0.14em;
-    max-width: 4.5rem;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    max-width: 4rem;
     text-align: center;
     line-height: 1.2;
   }
 
   .menu-wheel-only {
     min-width: 0;
+    /* keep drag smooth on iOS */
+    touch-action: none;
   }
 }
 
@@ -468,6 +475,44 @@ a {
   pointer-events: auto;
 }
 
+/* CSS-only staggered enter — no extra JS cost */
+.about-anim {
+  animation: about-rise 560ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--i, 0) * 90ms);
+}
+
+.service-anim {
+  animation: about-rise 480ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(120ms + var(--j, 0) * 55ms);
+}
+
+.stack-anim {
+  animation: chip-pop 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(280ms + var(--k, 0) * 40ms);
+}
+
+@keyframes about-rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes chip-pop {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 .about-hero {
   padding: 8px 0 28px;
 }
@@ -577,12 +622,13 @@ a {
   font-size: 13px;
   letter-spacing: 0.06em;
   background: rgba(0, 0, 0, 0.35);
-  transition: background 0.25s ease, border-color 0.25s ease;
+  transition: background 0.25s ease, border-color 0.25s ease, transform 0.2s ease;
 }
 
 .pill:hover {
   background: rgba(255, 255, 255, 0.08);
   border-color: rgba(255, 255, 255, 0.45);
+  transform: translateY(-1px);
 }
 
 @media (max-width: 640px) {
@@ -606,11 +652,15 @@ a {
 
 @media (prefers-reduced-motion: reduce) {
   .page-transition.fade-in,
-  .page-transition.fade-out {
+  .page-transition.fade-out,
+  .menu-logo,
+  .about-anim,
+  .service-anim,
+  .stack-anim {
     animation: none;
   }
 
-  .menu-logo {
-    animation: none;
+  .pill:hover {
+    transform: none;
   }
 }
