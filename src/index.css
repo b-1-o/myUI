@@ -268,8 +268,9 @@ a {
   }
 }
 
-.page-works--infinite {
-  background: #0a0a0a;
+/* Works: light grid + single Dither (no InfiniteMenu) */
+.page-works--grid {
+  background: #000;
   overflow: hidden;
 }
 
@@ -277,7 +278,7 @@ a {
   position: absolute;
   inset: 0;
   z-index: 0;
-  pointer-events: none;
+  pointer-events: auto;
 }
 
 .dither-fallback {
@@ -292,10 +293,90 @@ a {
   height: 100%;
 }
 
-.works-infinite {
+.works-grid-wrap {
   position: absolute;
   inset: 0;
   z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 72px 20px 28px;
+  pointer-events: none;
+  overflow: auto;
+}
+
+.works-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  width: min(720px, 100%);
+}
+
+.work-tile {
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 20px 14px 18px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(12, 12, 12, 0.55);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #f0f0f0;
+  text-align: center;
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+}
+
+.work-tile:hover {
+  border-color: rgba(255, 255, 255, 0.28);
+  background: rgba(20, 20, 20, 0.7);
+  transform: translateY(-2px);
+}
+
+.work-tile__icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+}
+
+.work-tile__icon img {
+  width: 48px;
+  height: 48px;
+  display: block;
+}
+
+.work-tile__title {
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.work-tile__desc {
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.5;
+}
+
+@media (max-width: 640px) {
+  .works-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .work-tile {
+    padding: 16px 10px 14px;
+    border-radius: 14px;
+  }
+
+  .work-tile__icon,
+  .work-tile__icon img {
+    width: 40px;
+    height: 40px;
+  }
 }
 
 .works-sheet {
@@ -436,21 +517,23 @@ a {
   pointer-events: none;
 }
 
-.about-content a,
-.about-content button,
-.about-content .glass-panel {
-  pointer-events: auto;
-}
-
+/* Glass lets mouse reach Dither; only real controls capture clicks */
 .glass-panel {
   margin-top: 12px;
   padding: 28px 24px 32px;
   border-radius: 24px;
-  background: rgba(12, 12, 12, 0.58);
+  background: rgba(12, 12, 12, 0.52);
   border: 1px solid rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(18px) saturate(1.2);
-  -webkit-backdrop-filter: blur(18px) saturate(1.2);
+  backdrop-filter: blur(16px) saturate(1.15);
+  -webkit-backdrop-filter: blur(16px) saturate(1.15);
   box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+}
+
+.glass-panel a,
+.glass-panel button,
+.about-content .back-btn {
+  pointer-events: auto;
 }
 
 .about-hero {
@@ -597,5 +680,9 @@ a {
 
   .menu-logo {
     animation: none;
+  }
+
+  .work-tile {
+    transition: none;
   }
 }
