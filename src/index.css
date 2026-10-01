@@ -273,9 +273,29 @@ a {
   overflow: hidden;
 }
 
+.works-dither {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.dither-fallback {
+  width: 100%;
+  height: 100%;
+  background: #000;
+}
+
+.works-dither .dither-container,
+.about-bg .dither-container {
+  width: 100%;
+  height: 100%;
+}
+
 .works-infinite {
   position: absolute;
   inset: 0;
+  z-index: 1;
 }
 
 .works-sheet {
@@ -412,17 +432,29 @@ a {
   z-index: 1;
   max-width: 780px;
   margin: 0 auto;
-  padding: 0 24px 80px;
+  padding: 72px 24px 80px;
   pointer-events: none;
 }
 
 .about-content a,
-.about-content button {
+.about-content button,
+.about-content .glass-panel {
   pointer-events: auto;
 }
 
+.glass-panel {
+  margin-top: 12px;
+  padding: 28px 24px 32px;
+  border-radius: 24px;
+  background: rgba(12, 12, 12, 0.58);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(18px) saturate(1.2);
+  -webkit-backdrop-filter: blur(18px) saturate(1.2);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+}
+
 .about-hero {
-  padding: 72px 0 40px;
+  padding: 8px 0 28px;
 }
 
 .about-kicker {
@@ -445,12 +477,12 @@ a {
   margin: 0;
   font-size: 16px;
   line-height: 1.65;
-  opacity: 0.75;
+  opacity: 0.8;
   max-width: 540px;
 }
 
 .about-block {
-  margin-bottom: 40px;
+  margin-bottom: 32px;
 }
 
 .about-block h2 {
@@ -460,13 +492,6 @@ a {
   text-transform: uppercase;
   opacity: 0.5;
   font-weight: 500;
-}
-
-.about-block > p {
-  margin: 0;
-  line-height: 1.6;
-  opacity: 0.75;
-  max-width: 520px;
 }
 
 .service-list {
@@ -500,7 +525,7 @@ a {
 .service-list p {
   margin: 0;
   font-size: 14px;
-  opacity: 0.6;
+  opacity: 0.65;
   line-height: 1.45;
 }
 
@@ -517,15 +542,14 @@ a {
   font-size: 12px;
   letter-spacing: 0.04em;
   background: rgba(0, 0, 0, 0.35);
-  backdrop-filter: blur(8px);
 }
 
 .about-cta {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin-top: 12px;
-  pointer-events: auto;
+  margin-top: 8px;
+  margin-bottom: 0;
 }
 
 .pill {
@@ -537,8 +561,7 @@ a {
   text-decoration: none;
   font-size: 13px;
   letter-spacing: 0.06em;
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(10px);
+  background: rgba(0, 0, 0, 0.35);
   transition: background 0.25s ease, border-color 0.25s ease;
 }
 
@@ -549,11 +572,12 @@ a {
 
 @media (max-width: 640px) {
   .about-content {
-    padding: 0 16px 64px;
+    padding: 56px 16px 64px;
   }
 
-  .about-hero {
-    padding: 64px 0 28px;
+  .glass-panel {
+    padding: 20px 16px 24px;
+    border-radius: 18px;
   }
 
   .page-header {
