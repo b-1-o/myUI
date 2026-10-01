@@ -28,7 +28,7 @@ export default function Home() {
           items={items}
           preset="panorama"
           intro="rise"
-          cardWidth={300}
+          cardWidth={320}
           aspectRatio={0.5625}
           speed={20}
           captions

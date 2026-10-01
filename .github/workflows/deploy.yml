@@ -36,10 +36,10 @@ jobs:
           curl -fsSL "$BASE_COMP/CircularCarousel/CircularCarousel.css" -o src/components/CircularCarousel.css
           curl -fsSL "$BASE_COMP/OptionWheel/OptionWheel.jsx" -o src/components/OptionWheel.jsx
           curl -fsSL "$BASE_COMP/OptionWheel/OptionWheel.css" -o src/components/OptionWheel.css
-          curl -fsSL "$BASE_BG/PatternWaves/PatternWaves.jsx" -o src/components/PatternWaves.jsx
-          curl -fsSL "$BASE_BG/PatternWaves/PatternWaves.css" -o src/components/PatternWaves.css
           curl -fsSL "$BASE_COMP/InfiniteMenu/InfiniteMenu.jsx" -o src/components/InfiniteMenu.jsx
           curl -fsSL "$BASE_COMP/InfiniteMenu/InfiniteMenu.css" -o src/components/InfiniteMenu.css
+          curl -fsSL "$BASE_BG/Dither/Dither.jsx" -o src/components/Dither.jsx
+          curl -fsSL "$BASE_BG/Dither/Dither.css" -o src/components/Dither.css
           python3 scripts/patch-infinite-menu.py
           sed -i 's/object-fit: cover;/object-fit: cover; filter: grayscale(1) contrast(1.06);/' src/components/CircularCarousel.css || true
 
