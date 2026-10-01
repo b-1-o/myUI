@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import CircularCarousel from '../components/CircularCarousel'
+import HoldButton from '../components/HoldButton'
 
 const photo = (id) =>
   `https://images.unsplash.com/${id}?w=900&q=80&auto=format&fit=max&sat=-100`
@@ -25,21 +26,16 @@ export default function Home() {
       <div className="home-carousel">
         <CircularCarousel
           items={items}
-          preset="cylinder"
+          preset="panorama"
           intro="rise"
-          cardWidth={260}
-          aspectRatio={0.72}
-          speed={10}
+          cardWidth={248}
+          aspectRatio={0.75}
+          speed={14}
           captions
-          gap={18}
-          tilt={-12}
-          perspective={1600}
-          momentum={0.55}
-          parallax={0.25}
-          stretch={0.35}
-          depthFade={0.5}
-          innerShade={0.5}
-          cornerRadius={14}
+          gap={7}
+          tilt={0}
+          perspective={1800}
+          innerShade={0.49}
           fadeColor="#0a0a0a"
         />
       </div>
@@ -47,16 +43,29 @@ export default function Home() {
       <div className="home-center">
         <p className="home-kicker">Frontend · UI · Web</p>
         <h1 className="home-title">b-1-o</h1>
-        <button
-          type="button"
-          className="enter-btn"
-          onClick={() => navigate('/menu')}
-          aria-label="Enter site"
-        >
-          <span className="enter-btn__ring" />
-          <span className="enter-btn__label">Enter</span>
-        </button>
-        <p className="home-hint">skills · services · works</p>
+        <div className="home-hold" style={{ pointerEvents: 'auto' }}>
+          <HoldButton
+            doneLabel="Welcome"
+            backgroundColor="#1a1a1a"
+            fillColor="#e8e8e8"
+            textColor="#f5f5f5"
+            fillTextColor="#0a0a0a"
+            size="lg"
+            radius={999}
+            fillDirection="right"
+            holdTime={1200}
+            releaseTime={200}
+            pressScale={0.97}
+            wave
+            waveAmplitude={5}
+            glow
+            resetAfter={600}
+            onHold={() => navigate('/menu')}
+          >
+            Enter
+          </HoldButton>
+        </div>
+        <p className="home-hint">hold to enter · skills · works</p>
       </div>
     </main>
   )
