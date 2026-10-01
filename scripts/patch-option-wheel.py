@@ -9,6 +9,8 @@ from pathlib import Path
 
 p = Path("src/components/OptionWheel.jsx")
 src = p.read_text()
+# Normalize template-literal syntax while applying text replacements, then restore it.
+src = src.replace(chr(96), "__BT__").replace(chr(36), "__DOLLAR__")
 
 needle = "    soundVolume\n  };"
 if "mobile:" not in src:
