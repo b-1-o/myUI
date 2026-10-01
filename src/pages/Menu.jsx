@@ -91,18 +91,6 @@ const LINKS = [
     ),
   },
   {
-    label: 'Music',
-    action: 'url',
-    href: 'https://b-1-o.github.io/music/',
-    logo: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2">
-        <path d="M9 18V5l12-2v13" />
-        <circle cx="6" cy="18" r="3" />
-        <circle cx="18" cy="16" r="3" />
-      </svg>
-    ),
-  },
-  {
     label: 'Home',
     action: 'route',
     to: '/',
@@ -188,13 +176,6 @@ export default function Menu() {
 
   return (
     <main className="page page-menu page-menu--wheel">
-      <div className="menu-logo-stage" aria-hidden="true">
-        <div key={current.label} className="menu-logo">
-          {current.logo}
-          <span className="menu-logo__name">{current.label}</span>
-        </div>
-      </div>
-
       <div className="menu-wheel-only">
         <OptionWheel
           items={LABELS}
@@ -203,17 +184,24 @@ export default function Menu() {
           textColor="#6a6a6a"
           activeColor="#f2f2f2"
           side="left"
-          fontSize={desktop ? 4.2 : 2.6}
-          spacing={desktop ? 1.55 : 1.35}
+          fontSize={desktop ? 4.2 : 2.35}
+          spacing={desktop ? 1.55 : 1.4}
           curve={0.95}
-          tilt={desktop ? 7 : 8}
+          tilt={desktop ? 7 : 9}
           blur={2}
-          fade={0.2}
-          smoothing={200}
-          inset={desktop ? 96 : 40}
+          fade={0.18}
+          smoothing={160}
+          inset={desktop ? 96 : 28}
           loop
           draggable
         />
+      </div>
+
+      <div className="menu-logo-stage" aria-hidden="true">
+        <div key={current.label} className="menu-logo">
+          {current.logo}
+          <span className="menu-logo__name">{current.label}</span>
+        </div>
       </div>
     </main>
   )

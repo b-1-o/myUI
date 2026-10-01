@@ -3,62 +3,48 @@ import ScrollStack, { ScrollStackItem } from '../components/ScrollStack'
 
 const BASE = import.meta.env.BASE_URL
 
-/** Real screenshots from repo assets/ — links match live projects */
+/** Order matches current screenshots; last two assets removed */
 const works = [
   {
-    id: 'heaven',
+    id: 'b1api',
     img: `${BASE}works/2026-09-21_20-57.png`,
-    url: 'https://heaven-b1o.vercel.app/',
-    title: 'Heaven',
-    tag: 'Next.js · TypeScript',
-  },
-  {
-    id: 'nothing',
-    img: `${BASE}works/2026-09-26_21-49.png`,
-    url: 'https://b-1-o.github.io/nothing/',
-    title: 'Nothing',
-    tag: 'React · UI',
-  },
-  {
-    id: 'music',
-    img: `${BASE}works/2026-09-27_20-46.png`,
-    url: 'https://b-1-o.github.io/music/',
-    title: 'Music',
-    tag: 'React · API',
-  },
-  {
-    id: 'barber',
-    img: `${BASE}works/2026-09-27_21-59.png`,
-    url: 'https://github.com/b-1-o/barber',
-    title: 'Barber',
-    tag: 'TypeScript',
+    url: 'https://github.com/b-1-o',
+    title: 'b1api',
+    tag: 'API · Backend',
   },
   {
     id: 'my',
-    img: `${BASE}works/2026-09-30_19-10.png`,
+    img: `${BASE}works/2026-09-26_21-49.png`,
     url: 'https://b-1-o.github.io/my/',
-    title: 'My',
+    title: 'my',
     tag: 'React · Design',
   },
   {
-    id: 'build',
-    img: `${BASE}works/2026-09-30_19-11.png`,
-    url: 'https://github.com/b-1-o/build',
-    title: 'Build',
-    tag: 'TypeScript',
+    id: 'heaven',
+    img: `${BASE}works/2026-09-27_20-46.png`,
+    url: 'https://heaven-b1o.vercel.app/',
+    title: 'HEAVEN',
+    tag: 'Next.js · TypeScript',
   },
   {
-    id: 'ascii',
-    img: `${BASE}works/2026-09-18_18-37_1.png`,
-    url: 'https://github.com/b-1-o/ascii',
-    title: 'ASCII',
-    tag: 'Experiment',
+    id: 'heaven-light',
+    img: `${BASE}works/2026-09-27_21-59.png`,
+    url: 'https://heaven-light.vercel.app/',
+    title: 'Heaven-light',
+    tag: 'React · UI',
+  },
+  {
+    id: 'nothing',
+    img: `${BASE}works/2026-09-30_19-10.png`,
+    url: 'https://b-1-o.github.io/nothing/',
+    title: 'nothing',
+    tag: 'React · CSS',
   },
   {
     id: 'portfolio',
-    img: `${BASE}works/2026-09-23_21-25.png`,
+    img: `${BASE}works/2026-09-30_19-11.png`,
     url: 'https://b-1-o.github.io/portfolio/',
-    title: 'Portfolio',
+    title: 'portfolio',
     tag: 'React · Vite',
   },
 ]
@@ -77,14 +63,14 @@ export default function Works() {
 
       <div className="works-stack">
         <ScrollStack
-          itemDistance={140}
-          itemScale={0.035}
-          itemStackDistance={40}
-          stackPosition="18%"
-          scaleEndPosition="10%"
-          baseScale={0.88}
+          itemDistance={100}
+          itemScale={0.03}
+          itemStackDistance={32}
+          stackPosition="16%"
+          scaleEndPosition="8%"
+          baseScale={0.9}
           rotationAmount={0}
-          blurAmount={0.8}
+          blurAmount={0.6}
         >
           {works.map((w) => (
             <ScrollStackItem key={w.id} itemClassName="work-card">
