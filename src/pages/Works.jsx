@@ -65,6 +65,12 @@ export default function Works() {
 
   return (
     <main className="page page-works page-works--infinite">
+      <div
+        className="works-photo-bg"
+        style={{ backgroundImage: `url(${BASE}back.png)` }}
+        aria-hidden="true"
+      />
+
       <header className="page-header page-header--over">
         <button type="button" className="back-btn" onClick={() => navigate('/menu')}>
           ← Menu
@@ -73,7 +79,7 @@ export default function Works() {
       </header>
 
       <div className="works-infinite">
-        <InfiniteMenu items={works} scale={1.15} backgroundColor="#0a0a0a" onAction={onAction} />
+        <InfiniteMenu items={works} scale={1.15} backgroundColor="transparent" onAction={onAction} />
       </div>
 
       {sheet && (

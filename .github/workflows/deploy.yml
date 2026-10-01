@@ -41,16 +41,18 @@ jobs:
           curl -fsSL "$BASE_BG/Dither/Dither.jsx" -o src/components/Dither.jsx
           curl -fsSL "$BASE_BG/Dither/Dither.css" -o src/components/Dither.css
           python3 scripts/patch-infinite-menu.py
+          python3 scripts/patch-dither.py
           sed -i 's/object-fit: cover;/object-fit: cover; filter: grayscale(1) contrast(1.06);/' src/components/CircularCarousel.css || true
 
       - name: Install dependencies
         run: npm install
 
-      - name: Stage work screenshots
+      - name: Stage public assets
         run: |
-          mkdir -p public/works
+          mkdir -p public/works public/icons
           if [ -d assets ]; then
             cp -f assets/*.png public/works/ 2>/dev/null || true
+            cp -f assets/back.png public/back.png 2>/dev/null || true
           fi
 
       - name: Build

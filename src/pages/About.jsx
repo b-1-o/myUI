@@ -32,12 +32,12 @@ export default function About() {
             backgroundColor={[0, 0, 0]}
             disableAnimation={false}
             enableMouseInteraction
-            mouseRadius={0.35}
+            mouseRadius={0.3}
             colorNum={4}
             waveAmplitude={0.3}
             waveFrequency={3}
             waveSpeed={0.05}
-            pixelSize={3}
+            pixelSize={2}
           />
         </Suspense>
       </div>
