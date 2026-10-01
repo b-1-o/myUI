@@ -87,7 +87,7 @@ export default function Home() {
         <div className="home-particle">
           <ParticleText
             text="b-1-o"
-            particleSize={mobile ? 2 : 2}
+            particleSize={2}
             density={mobile ? 5 : 4}
             color="#ffffff"
             highlightColor="#f5f5f5"
@@ -97,7 +97,7 @@ export default function Home() {
             pointerRepel={mobile ? 28 : 40}
             repelRadius={mobile ? 90 : 120}
             idleDrift={mobile ? 0.45 : 0.7}
-            trigger="hover"
+            trigger="mount"
             fontSize="clamp(3rem, 12vw, 8rem)"
             fontWeight={500}
             fontFamily="inherit"

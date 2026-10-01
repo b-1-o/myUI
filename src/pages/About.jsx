@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 const Dither = lazy(() => import('../components/Dither'))
@@ -20,26 +20,50 @@ const links = [
   { label: 'Email', href: 'mailto:eghabuzyan@gmail.com' },
 ]
 
+function useIsMobile() {
+  const [mobile, setMobile] = useState(() =>
+    typeof window !== 'undefined' ? window.matchMedia('(max-width: 900px)').matches : false
+  )
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 900px)')
+    const on = () => setMobile(mq.matches)
+    on()
+    mq.addEventListener('change', on)
+    return () => mq.removeEventListener('change', on)
+  }, [])
+  return mobile
+}
+
 export default function About() {
   const navigate = useNavigate()
+  const mobile = useIsMobile()
+  const [showFx, setShowFx] = useState(false)
+
+  // Defer WebGL until after first paint so text is usable immediately
+  useEffect(() => {
+    const id = window.setTimeout(() => setShowFx(true), mobile ? 120 : 40)
+    return () => window.clearTimeout(id)
+  }, [mobile])
 
   return (
     <main className="page page-about">
       <div className="about-bg" aria-hidden="true">
-        <Suspense fallback={<div className="dither-fallback" />}>
-          <Dither
-            waveColor={[0.5, 0.5, 0.5]}
-            backgroundColor={[0, 0, 0]}
-            disableAnimation={false}
-            enableMouseInteraction
-            mouseRadius={0.3}
-            colorNum={4}
-            waveAmplitude={0.3}
-            waveFrequency={3}
-            waveSpeed={0.05}
-            pixelSize={2}
-          />
-        </Suspense>
+        {showFx && (
+          <Suspense fallback={<div className="dither-fallback" />}>
+            <Dither
+              waveColor={[0.5, 0.5, 0.5]}
+              backgroundColor={[0, 0, 0]}
+              disableAnimation={false}
+              enableMouseInteraction={!mobile}
+              mouseRadius={0.3}
+              colorNum={4}
+              waveAmplitude={mobile ? 0.22 : 0.3}
+              waveFrequency={mobile ? 2 : 3}
+              waveSpeed={mobile ? 0.035 : 0.05}
+              pixelSize={mobile ? 4 : 3}
+            />
+          </Suspense>
+        )}
       </div>
 
       <div className="about-content">

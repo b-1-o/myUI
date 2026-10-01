@@ -73,13 +73,18 @@ export default function Works() {
   const navigate = useNavigate()
   const mobile = useIsMobile()
   const [sheet, setSheet] = useState(null)
+  const [ready, setReady] = useState(false)
+
+  useEffect(() => {
+    const id = window.setTimeout(() => setReady(true), mobile ? 80 : 0)
+    return () => window.clearTimeout(id)
+  }, [mobile])
 
   const onAction = useCallback((item) => {
     setSheet(item)
   }, [])
 
-  // Higher scale = smaller sphere on screen = less fill-rate cost (animation intact)
-  const scale = mobile ? 1.55 : 1.35
+  const scale = mobile ? 1.6 : 1.3
 
   return (
     <main className="page page-works page-works--infinite">
@@ -97,7 +102,9 @@ export default function Works() {
       </header>
 
       <div className="works-infinite">
-        <InfiniteMenu items={works} scale={scale} backgroundColor="transparent" onAction={onAction} />
+        {ready && (
+          <InfiniteMenu items={works} scale={scale} backgroundColor="transparent" onAction={onAction} />
+        )}
       </div>
 
       {sheet && (

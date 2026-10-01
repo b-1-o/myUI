@@ -152,7 +152,6 @@ export default function Menu() {
       }
     }
 
-    // Prevent page rubber-band / competing scroll while dragging wheel
     const blockScroll = (e) => {
       e.preventDefault()
     }
@@ -182,13 +181,13 @@ export default function Menu() {
           activeColor="#f2f2f2"
           side="left"
           fontSize={desktop ? 4.2 : 2.05}
-          spacing={desktop ? 1.55 : 1.52}
-          curve={0.95}
-          tilt={desktop ? 7 : 5}
-          blur={desktop ? 2 : 1.25}
-          fade={desktop ? 0.18 : 0.12}
-          smoothing={desktop ? 160 : 280}
-          inset={desktop ? 96 : 16}
+          spacing={desktop ? 1.55 : 1.5}
+          curve={desktop ? 0.95 : 0.88}
+          tilt={desktop ? 7 : 4}
+          blur={0}
+          fade={desktop ? 0.16 : 0.1}
+          smoothing={desktop ? 140 : 320}
+          inset={desktop ? 96 : 14}
           loop
           draggable
         />

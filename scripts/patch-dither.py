@@ -1,22 +1,21 @@
 #!/usr/bin/env python3
-"""Optimize Dither WebGL without removing wave/dither animation or mouse interaction."""
+"""Optimize Dither without removing wave/dither animation."""
 from pathlib import Path
 
 p = Path("src/components/Dither.jsx")
 src = p.read_text()
 
-# Cheaper GL context (animation + mouse unchanged)
 src = src.replace(
     "gl={{ antialias: true, preserveDrawingBuffer: true }}",
     "gl={{ antialias: false, powerPreference: 'high-performance', alpha: false, stencil: false, depth: false }}",
 )
 
-# Ensure dpr stays 1
-src = src.replace("dpr={1}", "dpr={1}")
+# Cap device pixel ratio hard
 if "dpr={Math.min" in src:
     src = src.replace("dpr={Math.min(window.devicePixelRatio, 2)}", "dpr={1}")
+src = src.replace("dpr={1}", "dpr={1}")
 
-# Document-level pointer so mouse works through glass/UI
+# Document pointer so glass does not block mouse interaction
 if "window.addEventListener('pointermove'" not in src:
     old_handler = """  const handlePointerMove = e => {
     if (!enableMouseInteraction) return;

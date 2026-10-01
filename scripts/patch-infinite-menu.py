@@ -36,44 +36,43 @@ m = re.search(r"const handleButtonClick = \(\) => \{.*?\n  \};", src, re.S)
 if m:
     src = src[: m.start()] + new_click + src[m.end() :]
 
-# Always force dpr 1
-src = src.replace(
-    "const dpr = Math.min(2, window.devicePixelRatio);",
-    "const dpr = 1;",
-)
-src = re.sub(
-    r"const dpr = Math\.min\([^)]+\);",
-    "const dpr = 1;",
-    src,
-)
+# dpr always 1
+src = re.sub(r"const dpr = Math\.min\([^)]+\);", "const dpr = 1;", src)
 
-# Cheaper GL + transparent clear for back.png
 src = src.replace(
     "this.gl = this.canvas.getContext('webgl2', { antialias: true, alpha: true });",
     "this.gl = this.canvas.getContext('webgl2', { antialias: false, alpha: true, powerPreference: 'high-performance', desynchronized: true });",
 )
 
-# Smaller atlas + simpler discs (same look, less GPU)
-src = src.replace("const cellSize = 512;", "const cellSize = 128;")
-src = src.replace("const cellSize = 256;", "const cellSize = 128;")
-src = src.replace("this.discGeo = new DiscGeometry(56, 1);", "this.discGeo = new DiscGeometry(24, 1);")
-src = src.replace("this.discGeo = new DiscGeometry(32, 1);", "this.discGeo = new DiscGeometry(24, 1);")
+# Quality: 256 atlas (sharp icons) — not 128 blurry, not 512 heavy
+src = src.replace("const cellSize = 512;", "const cellSize = 256;")
+src = src.replace("const cellSize = 128;", "const cellSize = 256;")
 
-# Cap rAF work: skip frames when tab hidden already exists; add soft mobile skip
-if "#frameSkip" not in src and "frameSkip" not in src:
-    # inject into run()
+# Geometry balance
+src = src.replace("this.discGeo = new DiscGeometry(56, 1);", "this.discGeo = new DiscGeometry(28, 1);")
+src = src.replace("this.discGeo = new DiscGeometry(32, 1);", "this.discGeo = new DiscGeometry(28, 1);")
+src = src.replace("this.discGeo = new DiscGeometry(24, 1);", "this.discGeo = new DiscGeometry(28, 1);")
+
+# Mobile ~30fps target to cut lag without killing motion
+if "TARGET_FRAME_DURATION" in src and "_mobileCap" not in src:
     src = src.replace(
-        "run(time = 0) {\nthis.#deltaTime = Math.min(32, time - this.#time);",
-        "run(time = 0) {\nif (this._stopped) return;\nthis.#deltaTime = Math.min(32, time - this.#time);",
+        "this.TARGET_FRAME_DURATION",
+        "this._mobileCap = (typeof window !== 'undefined' && window.matchMedia('(max-width: 640px)').matches); this.TARGET_FRAME_DURATION",
+        1,
     )
-    if "if (this._stopped) return;" not in src:
-        src = src.replace(
-            "run(time = 0) {",
-            "run(time = 0) {\nif (this._stopped) return;",
-            1,
-        )
+    # After assignment of TARGET if it's a class field, also patch run
+    src = src.replace(
+        "run(time = 0) {\n    this.#deltaTime = Math.min(32, time - this.#time);",
+        "run(time = 0) {\n    if (this._stopped) return;\n    if (this._mobileCap) {\n      this._fs = !this._fs;\n      if (this._fs) { requestAnimationFrame(t => this.run(t)); return; }\n    }\n    this.#deltaTime = Math.min(32, time - this.#time);",
+    )
 
-# Cleanup on unmount
+if "if (this._stopped) return;" not in src:
+    src = src.replace(
+        "run(time = 0) {",
+        "run(time = 0) {\n    if (this._stopped) return;",
+        1,
+    )
+
 if "sketch._stopped" not in src:
     src = src.replace(
         """    window.addEventListener('resize', handleResize);
@@ -98,12 +97,16 @@ if "sketch._stopped" not in src:
   }, [items, scale]);""",
     )
 
-# Mobile: lower sphere resolution via scale of viewport mapping — leave scale prop to page
+# Sharper atlas draws
+if "imageSmoothingEnabled" not in src and "drawImage(img" in src:
+    src = src.replace(
+        "ctx.drawImage(img,",
+        "ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high'; ctx.drawImage(img,",
+    )
 
 p.write_text(src)
 
-# Full CSS rewrite for under-circle labels + gray button
-css = """/* InfiniteMenu overlay — gray CTA, labels under sphere */
+css = """/* InfiniteMenu — gray CTA, labels under sphere */
 
 #infinite-grid-menu-canvas {
   cursor: grab;
