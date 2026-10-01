@@ -41,6 +41,7 @@ jobs:
           curl -fsSL "$BASE_BG/Dither/Dither.jsx" -o src/components/Dither.jsx
           curl -fsSL "$BASE_BG/Dither/Dither.css" -o src/components/Dither.css
           python3 scripts/patch-infinite-menu.py
+          python3 scripts/patch-option-wheel.py
           python3 scripts/patch-dither.py
           sed -i 's/object-fit: cover;/object-fit: cover; filter: grayscale(1) contrast(1.06);/' src/components/CircularCarousel.css || true
 
