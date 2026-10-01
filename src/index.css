@@ -672,3 +672,23 @@ a {
     -webkit-backdrop-filter: blur(10px) saturate(1.08);
   }
 }
+
+
+/* Works: keep the cinematic background, but isolate it from the WebGL layer. */
+.page-works--infinite .works-photo-bg {
+  contain: strict;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  will-change: transform;
+}
+
+@media (max-width: 640px) {
+  .page-works--infinite .works-photo-bg {
+    filter: grayscale(0.1) contrast(1.03);
+  }
+
+  .page-works--infinite .works-infinite {
+    contain: layout paint;
+  }
+}
