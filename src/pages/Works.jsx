@@ -20,14 +20,18 @@ export default function Works() {
   return (
     <main className="page page-works">
       <header className="page-header">
-        <button type="button" className="back-btn" onClick={() => navigate('/menu')}>\n          ← Menu\n        </button>
+        <button type="button" className="back-btn" onClick={() => navigate('/menu')}>
+          ← Menu
+        </button>
         <span className="page-tag">Selected works</span>
       </header>
 
       <div className="works-intro">
         <h1>Works</h1>
         <p>
-          Interfaces, product sites and experiments — React, TypeScript, motion and careful layout.\n          Screenshots render in monochrome.\n        </p>
+          Interfaces, product sites and experiments — React, TypeScript, motion and careful layout.
+          Screenshots render in monochrome.
+        </p>
       </div>
 
       <div className="works-masonry">
