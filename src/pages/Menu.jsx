@@ -137,7 +137,7 @@ export default function Menu() {
       if (!el || !root.contains(el)) return
       const items = [...root.querySelectorAll('.option-wheel__item')]
       const index = items.indexOf(el)
-      if (index >= 0) window.setTimeout(() => openIndex(index), 40)
+      if (index >= 0) window.setTimeout(() => openIndex(index), desktop ? 40 : 0)
     }
 
     const onKey = (e) => {
@@ -152,19 +152,20 @@ export default function Menu() {
       }
     }
 
-    const blockScroll = (e) => {
+    // Keep desktop wheel behavior unchanged. On touch devices, the wheel
+    // component owns the gesture through Pointer Events, so avoid an extra
+    // non-passive touchmove listener fighting the browser's input pipeline.
+    const blockWheel = (e) => {
       e.preventDefault()
     }
-    root.addEventListener('touchmove', blockScroll, { passive: false })
-    root.addEventListener('wheel', blockScroll, { passive: false })
+    root.addEventListener('wheel', blockWheel, { passive: false })
 
     root.addEventListener('click', onClick)
     root.addEventListener('keydown', onKey)
     return () => {
       root.removeEventListener('click', onClick)
       root.removeEventListener('keydown', onKey)
-      root.removeEventListener('touchmove', blockScroll)
-      root.removeEventListener('wheel', blockScroll)
+      root.removeEventListener('wheel', blockWheel)
     }
   }, [openIndex])
 
@@ -186,7 +187,7 @@ export default function Menu() {
           tilt={desktop ? 7 : 4}
           blur={0}
           fade={desktop ? 0.16 : 0.1}
-          smoothing={desktop ? 140 : 320}
+          smoothing={desktop ? 140 : 90}
           inset={desktop ? 96 : 14}
           loop
           draggable
