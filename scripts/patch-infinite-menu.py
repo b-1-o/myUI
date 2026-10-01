@@ -36,57 +36,27 @@ m = re.search(r"const handleButtonClick = \(\) => \{.*?\n  \};", src, re.S)
 if m:
     src = src[: m.start()] + new_click + src[m.end() :]
 
-src = re.sub(r"const dpr = Math\.min\([^)]+\);", "const dpr = 1;", src)
+src = re.sub(
+    r"const dpr = Math\.min\([^)]+\);",
+    "const dpr = typeof window !== 'undefined' && window.matchMedia('(max-width: 640px)').matches ? 0.88 : 1;",
+    src,
+    count=1,
+)
 
 src = src.replace(
-    "this.gl = this.canvas.getContext('webgl2', { antialias: true, alpha: true });",
+    "this.gl = this.canvas.getContext('webgl2', { antialias: false, alpha: true, powerPreference: 'high-performance', desynchronized: true });",
     "this.gl = this.canvas.getContext('webgl2', { antialias: false, alpha: true, powerPreference: 'high-performance', desynchronized: true });",
 )
 
-src = src.replace("const cellSize = 512;", "const cellSize = 256;")
+src = src.replace("const cellSize = 256;", "const cellSize = 256;")
 src = src.replace("const cellSize = 128;", "const cellSize = 256;")
 
-src = src.replace("this.discGeo = new DiscGeometry(56, 1);", "this.discGeo = new DiscGeometry(28, 1);")
+src = src.replace("this.discGeo = new DiscGeometry(28, 1);", "this.discGeo = new DiscGeometry(28, 1);")
 src = src.replace("this.discGeo = new DiscGeometry(32, 1);", "this.discGeo = new DiscGeometry(28, 1);")
 src = src.replace("this.discGeo = new DiscGeometry(24, 1);", "this.discGeo = new DiscGeometry(28, 1);")
 
-# Mobile alternate-frame skip inside run() only
-if "this._mobileCap" not in src:
-    old_run = "run(time = 0) {\n    this.#deltaTime = Math.min(32, time - this.#time);"
-    new_run = """run(time = 0) {
-    if (this._stopped) return;
-    if (this._mobileCap === undefined) {
-      this._mobileCap = typeof window !== 'undefined' && window.matchMedia('(max-width: 640px)').matches;
-    }
-    if (this._mobileCap) {
-      this._fs = !this._fs;
-      if (this._fs) {
-        requestAnimationFrame(t => this.run(t));
-        return;
-      }
-    }
-    this.#deltaTime = Math.min(32, time - this.#time);"""
-    if old_run in src:
-        src = src.replace(old_run, new_run, 1)
-    else:
-        # fallback format variations
-        src = src.replace(
-            "run(time = 0) {",
-            """run(time = 0) {
-    if (this._stopped) return;
-    if (this._mobileCap === undefined) {
-      this._mobileCap = typeof window !== 'undefined' && window.matchMedia('(max-width: 640px)').matches;
-    }
-    if (this._mobileCap) {
-      this._fs = !this._fs;
-      if (this._fs) {
-        requestAnimationFrame(t => this.run(t));
-        return;
-      }
-    }
-""",
-            1,
-        )
+# Keep mobile animation at the browser's native frame cadence.
+# Reduce canvas resolution instead of intentionally dropping every other frame.
 
 if "sketch._stopped" not in src:
     src = src.replace(
@@ -95,6 +65,12 @@ if "sketch._stopped" not in src:
 
     return () => {
       window.removeEventListener('resize', handleResize);
+      if (sketch) {
+        sketch._stopped = true;
+        try {
+          sketch.gl?.getExtension('WEBGL_lose_context')?.loseContext();
+        } catch (_) {}
+      }
     };
   }, [items, scale]);""",
         """    window.addEventListener('resize', handleResize);
