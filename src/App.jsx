@@ -1,4 +1,4 @@
-import { Routes, Route, useLocation } from 'react-router-dom'
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import Home from './pages/Home'
 import Menu from './pages/Menu'
@@ -30,6 +30,7 @@ export default function App() {
       >
         <Routes location={displayLocation}>
           <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Navigate to="/" replace />} />
           <Route path="/menu" element={<Menu />} />
           <Route path="/works" element={<Works />} />
           <Route path="/about" element={<About />} />
