@@ -36,7 +36,6 @@ m = re.search(r"const handleButtonClick = \(\) => \{.*?\n  \};", src, re.S)
 if m:
     src = src[: m.start()] + new_click + src[m.end() :]
 
-# dpr always 1
 src = re.sub(r"const dpr = Math\.min\([^)]+\);", "const dpr = 1;", src)
 
 src = src.replace(
@@ -44,34 +43,50 @@ src = src.replace(
     "this.gl = this.canvas.getContext('webgl2', { antialias: false, alpha: true, powerPreference: 'high-performance', desynchronized: true });",
 )
 
-# Quality: 256 atlas (sharp icons) — not 128 blurry, not 512 heavy
 src = src.replace("const cellSize = 512;", "const cellSize = 256;")
 src = src.replace("const cellSize = 128;", "const cellSize = 256;")
 
-# Geometry balance
 src = src.replace("this.discGeo = new DiscGeometry(56, 1);", "this.discGeo = new DiscGeometry(28, 1);")
 src = src.replace("this.discGeo = new DiscGeometry(32, 1);", "this.discGeo = new DiscGeometry(28, 1);")
 src = src.replace("this.discGeo = new DiscGeometry(24, 1);", "this.discGeo = new DiscGeometry(28, 1);")
 
-# Mobile ~30fps target to cut lag without killing motion
-if "TARGET_FRAME_DURATION" in src and "_mobileCap" not in src:
-    src = src.replace(
-        "this.TARGET_FRAME_DURATION",
-        "this._mobileCap = (typeof window !== 'undefined' && window.matchMedia('(max-width: 640px)').matches); this.TARGET_FRAME_DURATION",
-        1,
-    )
-    # After assignment of TARGET if it's a class field, also patch run
-    src = src.replace(
-        "run(time = 0) {\n    this.#deltaTime = Math.min(32, time - this.#time);",
-        "run(time = 0) {\n    if (this._stopped) return;\n    if (this._mobileCap) {\n      this._fs = !this._fs;\n      if (this._fs) { requestAnimationFrame(t => this.run(t)); return; }\n    }\n    this.#deltaTime = Math.min(32, time - this.#time);",
-    )
-
-if "if (this._stopped) return;" not in src:
-    src = src.replace(
-        "run(time = 0) {",
-        "run(time = 0) {\n    if (this._stopped) return;",
-        1,
-    )
+# Mobile alternate-frame skip inside run() only
+if "this._mobileCap" not in src:
+    old_run = "run(time = 0) {\n    this.#deltaTime = Math.min(32, time - this.#time);"
+    new_run = """run(time = 0) {
+    if (this._stopped) return;
+    if (this._mobileCap === undefined) {
+      this._mobileCap = typeof window !== 'undefined' && window.matchMedia('(max-width: 640px)').matches;
+    }
+    if (this._mobileCap) {
+      this._fs = !this._fs;
+      if (this._fs) {
+        requestAnimationFrame(t => this.run(t));
+        return;
+      }
+    }
+    this.#deltaTime = Math.min(32, time - this.#time);"""
+    if old_run in src:
+        src = src.replace(old_run, new_run, 1)
+    else:
+        # fallback format variations
+        src = src.replace(
+            "run(time = 0) {",
+            """run(time = 0) {
+    if (this._stopped) return;
+    if (this._mobileCap === undefined) {
+      this._mobileCap = typeof window !== 'undefined' && window.matchMedia('(max-width: 640px)').matches;
+    }
+    if (this._mobileCap) {
+      this._fs = !this._fs;
+      if (this._fs) {
+        requestAnimationFrame(t => this.run(t));
+        return;
+      }
+    }
+""",
+            1,
+        )
 
 if "sketch._stopped" not in src:
     src = src.replace(
@@ -97,7 +112,6 @@ if "sketch._stopped" not in src:
   }, [items, scale]);""",
     )
 
-# Sharper atlas draws
 if "imageSmoothingEnabled" not in src and "drawImage(img" in src:
     src = src.replace(
         "ctx.drawImage(img,",
@@ -106,6 +120,8 @@ if "imageSmoothingEnabled" not in src and "drawImage(img" in src:
 
 p.write_text(src)
 
+css = Path("src/components/InfiniteMenu.css").read_text()
+# Keep CSS from previous write if already customized; always rewrite labels under sphere
 css = """/* InfiniteMenu — gray CTA, labels under sphere */
 
 #infinite-grid-menu-canvas {
