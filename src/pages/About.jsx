@@ -41,8 +41,24 @@ export default function About() {
 
   // Defer WebGL until after first paint so text is usable immediately
   useEffect(() => {
-    const id = window.setTimeout(() => setShowFx(true), mobile ? 120 : 40)
-    return () => window.clearTimeout(id)
+    let cancelled = false
+    const mountFx = () => {
+      if (!cancelled) setShowFx(true)
+    }
+
+    if ('requestIdleCallback' in window) {
+      const id = window.requestIdleCallback(mountFx, { timeout: mobile ? 700 : 500 })
+      return () => {
+        cancelled = true
+        window.cancelIdleCallback(id)
+      }
+    }
+
+    const id = window.setTimeout(mountFx, mobile ? 260 : 160)
+    return () => {
+      cancelled = true
+      window.clearTimeout(id)
+    }
   }, [mobile])
 
   return (
