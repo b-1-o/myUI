@@ -43,5 +43,9 @@ if "window.addEventListener('pointermove'" not in src:
     if old_handler in src:
         src = src.replace(old_handler, new_handler)
 
+# The effect is already intentionally dithered; disabling composer MSAA
+# removes GPU work while preserving the wave/dither look.
+src = src.replace('<EffectComposer>', '<EffectComposer multisampling={0}>')
+
 p.write_text(src)
 print("Dither optimized")
