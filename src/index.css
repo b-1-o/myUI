@@ -119,7 +119,13 @@ a {
 }
 
 .page-home {
-  background: #050505;
+  background: #0a0a0a;
+}
+
+.home-carousel {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
 }
 
 .home-center {
@@ -133,6 +139,7 @@ a {
   pointer-events: none;
   text-align: center;
   padding: 24px;
+  background: radial-gradient(ellipse at center, rgba(10, 10, 10, 0.5) 0%, rgba(10, 10, 10, 0.12) 48%, transparent 72%);
 }
 
 .home-kicker {
@@ -227,44 +234,58 @@ a {
 }
 
 .work-card {
-  height: min(28rem, 70vh) !important;
+  height: min(36rem, 78vh) !important;
   padding: 0 !important;
-  border-radius: 28px !important;
+  border-radius: 24px !important;
   overflow: hidden;
-  background: #111;
+  background: #0e0e0e;
   border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45) !important;
 }
 
 .work-card__link {
-  display: block;
+  display: flex;
+  flex-direction: column;
   width: 100%;
   height: 100%;
   text-decoration: none;
   position: relative;
 }
 
+.work-card__frame {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  place-items: center;
+  padding: 1.25rem 1.25rem 0;
+  background: #0a0a0a;
+}
+
 .work-card__img {
-  position: absolute;
-  inset: 0;
-  background-size: cover;
-  background-position: center;
-  filter: grayscale(1) contrast(1.06);
-  transition: filter 0.35s ease, transform 0.5s ease;
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  object-position: center;
+  filter: grayscale(1) contrast(1.04);
+  border-radius: 8px;
+  transition: filter 0.35s ease;
 }
 
 .work-card__link:hover .work-card__img {
-  filter: grayscale(0.35) contrast(1.05);
-  transform: scale(1.03);
+  filter: grayscale(0.25) contrast(1.03);
 }
 
 .work-card__meta {
-  position: absolute;
+  position: relative;
   left: 0;
   right: 0;
   bottom: 0;
-  padding: 20px 24px;
-  background: linear-gradient(transparent, rgba(0, 0, 0, 0.85));
+  padding: 16px 24px 20px;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+  flex-shrink: 0;
 }
 
 .work-card__meta h2 {
