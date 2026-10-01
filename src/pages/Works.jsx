@@ -1,12 +1,14 @@
-import { useCallback, useState } from 'react'
+import { lazy, Suspense, useCallback, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import InfiniteMenu from '../components/InfiniteMenu'
+
+const Dither = lazy(() => import('../components/Dither'))
 
 const BASE = import.meta.env.BASE_URL
 
 const works = [
   {
-    image: `${BASE}works/2026-09-21_20-57.png`,
+    image: `${BASE}icons/b1api.svg`,
     title: 'b1api',
     description: 'API · Backend',
     site: 'https://github.com/b-1-o',
@@ -14,7 +16,7 @@ const works = [
     link: 'https://github.com/b-1-o',
   },
   {
-    image: `${BASE}works/2026-09-26_21-49.png`,
+    image: `${BASE}icons/my.svg`,
     title: 'my',
     description: 'React · Design',
     site: 'https://b-1-o.github.io/my/',
@@ -22,7 +24,7 @@ const works = [
     link: 'https://b-1-o.github.io/my/',
   },
   {
-    image: `${BASE}works/2026-09-27_20-46.png`,
+    image: `${BASE}icons/heaven.svg`,
     title: 'HEAVEN',
     description: 'Next.js · TypeScript',
     site: 'https://heaven-b1o.vercel.app/',
@@ -30,7 +32,7 @@ const works = [
     link: 'https://heaven-b1o.vercel.app/',
   },
   {
-    image: `${BASE}works/2026-09-27_21-59.png`,
+    image: `${BASE}icons/heaven-light.svg`,
     title: 'Heaven-light',
     description: 'React · UI',
     site: 'https://heaven-light.vercel.app/',
@@ -38,7 +40,7 @@ const works = [
     link: 'https://heaven-light.vercel.app/',
   },
   {
-    image: `${BASE}works/2026-09-30_19-10.png`,
+    image: `${BASE}icons/nothing.svg`,
     title: 'nothing',
     description: 'React · CSS',
     site: 'https://b-1-o.github.io/nothing/',
@@ -46,7 +48,7 @@ const works = [
     link: 'https://b-1-o.github.io/nothing/',
   },
   {
-    image: `${BASE}works/2026-09-30_19-11.png`,
+    image: `${BASE}icons/portfolio.svg`,
     title: 'portfolio',
     description: 'React · Vite',
     site: 'https://b-1-o.github.io/portfolio/',
@@ -67,6 +69,23 @@ export default function Works() {
 
   return (
     <main className="page page-works page-works--infinite">
+      <div className="works-dither" aria-hidden="true">
+        <Suspense fallback={<div className="dither-fallback" />}>
+          <Dither
+            waveColor={[0.5, 0.5, 0.5]}
+            backgroundColor={[0, 0, 0]}
+            disableAnimation={false}
+            enableMouseInteraction
+            mouseRadius={0.3}
+            colorNum={4}
+            waveAmplitude={0.3}
+            waveFrequency={3}
+            waveSpeed={0.05}
+            pixelSize={2}
+          />
+        </Suspense>
+      </div>
+
       <header className="page-header page-header--over">
         <button type="button" className="back-btn" onClick={() => navigate('/menu')}>
           ← Menu
@@ -75,7 +94,7 @@ export default function Works() {
       </header>
 
       <div className="works-infinite">
-        <InfiniteMenu items={works} scale={0.85} backgroundColor="#0a0a0a" onAction={onAction} />
+        <InfiniteMenu items={works} scale={0.85} backgroundColor="transparent" onAction={onAction} />
       </div>
 
       {sheet && (
@@ -97,12 +116,7 @@ export default function Works() {
                 </a>
               )}
               {sheet.repo && (
-                <a
-                  className="works-sheet__btn"
-                  href={sheet.repo}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <a className="works-sheet__btn" href={sheet.repo} target="_blank" rel="noopener noreferrer">
                   Repository →
                 </a>
               )}

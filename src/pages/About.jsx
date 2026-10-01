@@ -1,5 +1,7 @@
+import { lazy, Suspense } from 'react'
 import { useNavigate } from 'react-router-dom'
-import PatternWaves from '../components/PatternWaves'
+
+const Dither = lazy(() => import('../components/Dither'))
 
 const services = [
   ['01', 'Custom websites', 'Modern sites for small businesses, freelancers and startups.'],
@@ -18,24 +20,20 @@ export default function About() {
   return (
     <main className="page page-about">
       <div className="about-bg" aria-hidden="true">
-        <PatternWaves
-          preset="silk"
-          color="#ffffff"
-          backgroundColor="#000000"
-          fade="edges"
-          interactive
-          cursorSize={50}
-          cursorStrength={0.45}
-          markSize={0.75}
-          depth={0.6}
-          shine={0.2}
-          contrast={1}
-          scale={0.95}
-          direction={35}
-          fadeSize={0.75}
-          speed={0.32}
-          opacity={0.9}
-        />
+        <Suspense fallback={<div className="dither-fallback" />}>
+          <Dither
+            waveColor={[0.5, 0.5, 0.5]}
+            backgroundColor={[0, 0, 0]}
+            disableAnimation={false}
+            enableMouseInteraction
+            mouseRadius={0.3}
+            colorNum={4}
+            waveAmplitude={0.3}
+            waveFrequency={3}
+            waveSpeed={0.05}
+            pixelSize={2}
+          />
+        </Suspense>
       </div>
 
       <div className="about-content">
@@ -46,61 +44,55 @@ export default function About() {
           <span className="page-tag">About</span>
         </header>
 
-        <section className="about-hero">
-          <p className="about-kicker">Frontend Developer · UI Engineer</p>
-          <h1>I build clean, modern web experiences.</h1>
-          <p className="about-lead">
-            I’m <strong>b1o</strong> — focused on React, TypeScript and careful UI. I ship responsive
-            products, polished interactions and conversion-minded sites for people who care about
-            detail.
-          </p>
-        </section>
+        <div className="glass-panel">
+          <section className="about-hero">
+            <p className="about-kicker">Frontend Developer · UI Engineer</p>
+            <h1>I build clean, modern web experiences.</h1>
+            <p className="about-lead">
+              I’m <strong>b1o</strong> — focused on React, TypeScript and careful UI. I ship responsive
+              products, polished interactions and conversion-minded sites for people who care about
+              detail.
+            </p>
+          </section>
 
-        <section className="about-block">
-          <h2>What I do</h2>
-          <ul className="service-list">
-            {services.map(([n, title, desc]) => (
-              <li key={n}>
-                <span className="service-n">{n}</span>
-                <div>
-                  <strong>{title}</strong>
-                  <p>{desc}</p>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </section>
+          <section className="about-block">
+            <h2>What I do</h2>
+            <ul className="service-list">
+              {services.map(([n, title, desc]) => (
+                <li key={n}>
+                  <span className="service-n">{n}</span>
+                  <div>
+                    <strong>{title}</strong>
+                    <p>{desc}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </section>
 
-        <section className="about-block">
-          <h2>Skills & tools</h2>
-          <div className="stack-row">
-            {stack.map((s) => (
-              <span key={s} className="stack-chip">
-                {s}
-              </span>
-            ))}
-          </div>
-        </section>
+          <section className="about-block">
+            <h2>Stack</h2>
+            <div className="stack-row">
+              {stack.map((s) => (
+                <span key={s} className="stack-chip">
+                  {s}
+                </span>
+              ))}
+            </div>
+          </section>
 
-        <section className="about-block">
-          <h2>What I’m improving</h2>
-          <p>
-            Deeper motion systems, design systems at scale, backend fluency for full-stack shipping,
-            and tighter performance budgets on complex UI.
-          </p>
-        </section>
-
-        <section className="about-cta">
-          <a className="pill" href="https://www.fiverr.com/users/webbio" target="_blank" rel="noreferrer">
-            Hire on Fiverr →
-          </a>
-          <a className="pill" href="https://github.com/b-1-o" target="_blank" rel="noreferrer">
-            GitHub →
-          </a>
-          <a className="pill" href="mailto:erikghabuzyan6@gmail.com">
-            Mail →
-          </a>
-        </section>
+          <section className="about-block about-cta">
+            <a className="pill" href="https://www.fiverr.com/users/webbio" target="_blank" rel="noopener noreferrer">
+              Fiverr
+            </a>
+            <a className="pill" href="https://github.com/b-1-o" target="_blank" rel="noopener noreferrer">
+              GitHub
+            </a>
+            <a className="pill" href="mailto:erikghabuzyan6@gmail.com">
+              Email
+            </a>
+          </section>
+        </div>
       </div>
     </main>
   )
