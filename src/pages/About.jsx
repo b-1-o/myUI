@@ -14,6 +14,12 @@ const services = [
 
 const stack = ['HTML', 'CSS', 'JavaScript', 'React', 'Next.js', 'TypeScript', 'Vite', 'Git', 'GSAP', 'Linux']
 
+const links = [
+  { label: 'Fiverr', href: 'https://www.fiverr.com/users/webbio' },
+  { label: 'GitHub', href: 'https://github.com/b-1-o' },
+  { label: 'Email', href: 'mailto:erikghabuzyan6@gmail.com' },
+]
+
 export default function About() {
   const navigate = useNavigate()
 
@@ -26,12 +32,12 @@ export default function About() {
             backgroundColor={[0, 0, 0]}
             disableAnimation={false}
             enableMouseInteraction
-            mouseRadius={0.3}
+            mouseRadius={0.35}
             colorNum={4}
             waveAmplitude={0.3}
             waveFrequency={3}
             waveSpeed={0.05}
-            pixelSize={2}
+            pixelSize={3}
           />
         </Suspense>
       </div>
@@ -82,15 +88,17 @@ export default function About() {
           </section>
 
           <section className="about-block about-cta">
-            <a className="pill" href="https://www.fiverr.com/users/webbio" target="_blank" rel="noopener noreferrer">
-              Fiverr
-            </a>
-            <a className="pill" href="https://github.com/b-1-o" target="_blank" rel="noopener noreferrer">
-              GitHub
-            </a>
-            <a className="pill" href="mailto:erikghabuzyan6@gmail.com">
-              Email
-            </a>
+            {links.map((l) => (
+              <a
+                key={l.label}
+                className="pill"
+                href={l.href}
+                target={l.href.startsWith('mailto:') ? undefined : '_blank'}
+                rel={l.href.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
+              >
+                {l.label}
+              </a>
+            ))}
           </section>
         </div>
       </div>
