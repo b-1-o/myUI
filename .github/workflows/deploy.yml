@@ -25,8 +25,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: npm
+          node-version: 22
 
       - name: Fetch React Bits components
         run: |
@@ -41,7 +40,6 @@ jobs:
           curl -fsSL "$BASE_COMP/Masonry/Masonry.css" -o src/components/Masonry.css
           curl -fsSL "$BASE_BG/PatternWaves/PatternWaves.jsx" -o src/components/PatternWaves.jsx
           curl -fsSL "$BASE_BG/PatternWaves/PatternWaves.css" -o src/components/PatternWaves.css
-          # Monochrome presentation for carousel + masonry images
           sed -i 's/object-fit: cover;/object-fit: cover; filter: grayscale(1) contrast(1.08);/' src/components/CircularCarousel.css || true
           sed -i 's/border-radius: 10px;/border-radius: 10px; filter: grayscale(1) contrast(1.05);/' src/components/Masonry.css || true
 
