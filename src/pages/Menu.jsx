@@ -53,7 +53,7 @@ const LINKS = [
     href: 'https://www.linkedin.com/in/b1o',
     logo: (
       <svg viewBox="0 0 24 24" fill="currentColor">
-        <path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22 2H2v20h20V2z" />
+        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
       </svg>
     ),
   },
@@ -71,33 +71,11 @@ const LINKS = [
   {
     label: 'Mail',
     action: 'url',
-    href: 'mailto:erikghabuzyan6@gmail.com',
+    href: 'mailto:eghabuzyan@gmail.com',
     logo: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2">
         <rect x="3" y="5" width="18" height="14" rx="2" />
         <path d="m3 7 9 7 9-7" />
-      </svg>
-    ),
-  },
-  {
-    label: 'Heaven',
-    action: 'url',
-    href: 'https://heaven-b1o.vercel.app/',
-    logo: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2">
-        <path d="M12 3l7 6v11a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V9l7-6z" />
-        <path d="M9 21v-8h6v8" />
-      </svg>
-    ),
-  },
-  {
-    label: 'Home',
-    action: 'route',
-    to: '/',
-    logo: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2">
-        <path d="M3 11.5 12 4l9 7.5" />
-        <path d="M6 10v9h12v-9" />
       </svg>
     ),
   },
@@ -106,15 +84,15 @@ const LINKS = [
 const LABELS = LINKS.map((l) => l.label)
 
 function useIsDesktop() {
-  const [desktop, setDesktop] = useState(
+  const [desktop, setDesktop] = useState(() =>
     typeof window !== 'undefined' ? window.matchMedia('(min-width: 900px)').matches : true
   )
   useEffect(() => {
     const mq = window.matchMedia('(min-width: 900px)')
-    const on = () => setDesktop(mq.matches)
-    on()
-    mq.addEventListener?.('change', on)
-    return () => mq.removeEventListener?.('change', on)
+    const onChange = () => setDesktop(mq.matches)
+    onChange()
+    mq.addEventListener('change', onChange)
+    return () => mq.removeEventListener('change', onChange)
   }, [])
   return desktop
 }
@@ -184,14 +162,14 @@ export default function Menu() {
           textColor="#6a6a6a"
           activeColor="#f2f2f2"
           side="left"
-          fontSize={desktop ? 4.2 : 2.35}
-          spacing={desktop ? 1.55 : 1.4}
+          fontSize={desktop ? 4.2 : 2.1}
+          spacing={desktop ? 1.55 : 1.48}
           curve={0.95}
-          tilt={desktop ? 7 : 9}
-          blur={2}
-          fade={0.18}
-          smoothing={160}
-          inset={desktop ? 96 : 28}
+          tilt={desktop ? 7 : 6}
+          blur={desktop ? 2 : 1.5}
+          fade={desktop ? 0.18 : 0.14}
+          smoothing={desktop ? 160 : 220}
+          inset={desktop ? 96 : 20}
           loop
           draggable
         />

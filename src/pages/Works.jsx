@@ -30,12 +30,12 @@ const works = [
     link: 'https://heaven-b1o.vercel.app/',
   },
   {
-    image: `${BASE}icons/heaven-light.svg`,
-    title: 'Heaven-light',
-    description: 'React · UI',
-    site: 'https://heaven-light.vercel.app/',
-    repo: 'https://github.com/b-1-o/heaven',
-    link: 'https://heaven-light.vercel.app/',
+    image: `${BASE}icons/ascii.svg`,
+    title: 'ascii',
+    description: 'Art · Terminal',
+    site: 'https://b-1-o.github.io/ascii/',
+    repo: 'https://github.com/b-1-o/ascii',
+    link: 'https://b-1-o.github.io/ascii/',
   },
   {
     image: `${BASE}icons/nothing.svg`,
@@ -79,7 +79,7 @@ export default function Works() {
       </header>
 
       <div className="works-infinite">
-        <InfiniteMenu items={works} scale={1.15} backgroundColor="transparent" onAction={onAction} />
+        <InfiniteMenu items={works} scale={1.35} backgroundColor="transparent" onAction={onAction} />
       </div>
 
       {sheet && (

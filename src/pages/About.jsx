@@ -17,7 +17,7 @@ const stack = ['HTML', 'CSS', 'JavaScript', 'React', 'Next.js', 'TypeScript', 'V
 const links = [
   { label: 'Fiverr', href: 'https://www.fiverr.com/users/webbio' },
   { label: 'GitHub', href: 'https://github.com/b-1-o' },
-  { label: 'Email', href: 'mailto:erikghabuzyan6@gmail.com' },
+  { label: 'Email', href: 'mailto:eghabuzyan@gmail.com' },
 ]
 
 export default function About() {
@@ -50,8 +50,8 @@ export default function About() {
           <span className="page-tag">About</span>
         </header>
 
-        <div className="glass-panel">
-          <section className="about-hero">
+        <div className="glass-panel about-animate">
+          <section className="about-hero about-anim" style={{ '--i': 0 }}>
             <p className="about-kicker">Frontend Developer · UI Engineer</p>
             <h1>I build clean, modern web experiences.</h1>
             <p className="about-lead">
@@ -61,11 +61,11 @@ export default function About() {
             </p>
           </section>
 
-          <section className="about-block">
+          <section className="about-block about-anim" style={{ '--i': 1 }}>
             <h2>What I do</h2>
             <ul className="service-list">
-              {services.map(([n, title, desc]) => (
-                <li key={n}>
+              {services.map(([n, title, desc], idx) => (
+                <li key={n} className="service-anim" style={{ '--j': idx }}>
                   <span className="service-n">{n}</span>
                   <div>
                     <strong>{title}</strong>
@@ -76,18 +76,18 @@ export default function About() {
             </ul>
           </section>
 
-          <section className="about-block">
+          <section className="about-block about-anim" style={{ '--i': 2 }}>
             <h2>Stack</h2>
             <div className="stack-row">
-              {stack.map((s) => (
-                <span key={s} className="stack-chip">
+              {stack.map((s, idx) => (
+                <span key={s} className="stack-chip stack-anim" style={{ '--k': idx }}>
                   {s}
                 </span>
               ))}
             </div>
           </section>
 
-          <section className="about-block about-cta">
+          <section className="about-block about-cta about-anim" style={{ '--i': 3 }}>
             {links.map((l) => (
               <a
                 key={l.label}
