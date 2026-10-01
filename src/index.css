@@ -157,38 +157,8 @@ a {
   letter-spacing: -0.03em;
 }
 
-.enter-btn {
+.home-hold {
   pointer-events: auto;
-  position: relative;
-  width: 120px;
-  height: 120px;
-  border-radius: 999px;
-  display: grid;
-  place-items: center;
-  isolation: isolate;
-  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.enter-btn:hover {
-  transform: scale(1.05);
-}
-
-.enter-btn__ring {
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  box-shadow: 0 0 0 12px rgba(255, 255, 255, 0.03), inset 0 0 40px rgba(255, 255, 255, 0.04);
-  animation: enter-pulse 3.2s ease-in-out infinite;
-}
-
-.enter-btn__label {
-  position: relative;
-  z-index: 1;
-  font-size: 14px;
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  font-weight: 500;
 }
 
 .home-hint {
@@ -198,22 +168,65 @@ a {
   letter-spacing: 0.12em;
 }
 
-@keyframes enter-pulse {
-  0%,
-  100% {
-    transform: scale(1);
-    opacity: 1;
+.page-menu--wheel {
+  background: #0a0a0a;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+@media (max-width: 800px) {
+  .page-menu--wheel {
+    grid-template-columns: 1fr;
   }
-  50% {
-    transform: scale(1.06);
-    opacity: 0.75;
+  .menu-logo-stage {
+    display: none;
   }
 }
 
-.page-menu--wheel {
-  background: #0a0a0a;
+.menu-logo-stage {
+  position: relative;
   display: flex;
-  align-items: stretch;
+  align-items: center;
+  justify-content: center;
+  height: 100dvh;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.menu-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  color: rgba(255, 255, 255, 0.88);
+  animation: menu-logo-in 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.menu-logo svg {
+  width: min(28vw, 220px);
+  height: min(28vw, 220px);
+  opacity: 0.92;
+}
+
+.menu-logo__name {
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  font-weight: 300;
+  opacity: 0.55;
+}
+
+@keyframes menu-logo-in {
+  from {
+    opacity: 0;
+    transform: scale(0.88) translateY(12px);
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: blur(0);
+  }
 }
 
 .menu-wheel-only {
@@ -455,9 +468,6 @@ a {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .enter-btn__ring {
-    animation: none;
-  }
   .page-transition.fade-in,
   .page-transition.fade-out {
     animation: none;
