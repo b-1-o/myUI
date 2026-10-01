@@ -1,4 +1,4 @@
-/* Home viewport / phone polish — keeps carousel effects */
+/* Home viewport / phone polish */
 .home-carousel {
   contain: layout paint;
   transform: translateZ(0);
@@ -14,6 +14,18 @@
   padding-bottom: max(24px, env(safe-area-inset-bottom, 0px));
 }
 
+.home-particle {
+  width: min(92vw, 720px);
+  height: clamp(100px, 22vw, 200px);
+  margin: 0 auto 8px;
+  pointer-events: auto;
+}
+
+.home-particle .particle-text {
+  min-height: 0;
+  height: 100%;
+}
+
 @media (max-width: 640px) {
   .page-home {
     height: 100dvh;
@@ -23,6 +35,12 @@
   .home-center {
     padding: 16px;
     padding-bottom: max(20px, env(safe-area-inset-bottom, 0px));
+  }
+
+  .home-particle {
+    height: 110px;
+    width: min(94vw, 420px);
+    margin-bottom: 4px;
   }
 
   .home-kicker {

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import CircularCarousel from '../components/CircularCarousel'
 import HoldButton from '../components/HoldButton'
+import ParticleText from '../components/ParticleText'
 import '../home-mobile.css'
 
 const photo = (id) =>
@@ -83,7 +84,26 @@ export default function Home() {
 
       <div className="home-center">
         <p className="home-kicker">Frontend · UI · Web</p>
-        <h1 className="home-title">b-1-o</h1>
+        <div className="home-particle">
+          <ParticleText
+            text="b-1-o"
+            particleSize={mobile ? 2 : 2}
+            density={mobile ? 5 : 4}
+            color="#ffffff"
+            highlightColor="#f5f5f5"
+            scatter={mobile ? 120 : 180}
+            gatherDuration={mobile ? 1200 : 1600}
+            stagger={mobile ? 280 : 420}
+            pointerRepel={mobile ? 28 : 40}
+            repelRadius={mobile ? 90 : 120}
+            idleDrift={mobile ? 0.45 : 0.7}
+            trigger="hover"
+            fontSize="clamp(3rem, 12vw, 8rem)"
+            fontWeight={500}
+            fontFamily="inherit"
+            glow={!mobile}
+          />
+        </div>
         <div className="home-hold" style={{ pointerEvents: 'auto' }}>
           <HoldButton
             doneLabel="Welcome"

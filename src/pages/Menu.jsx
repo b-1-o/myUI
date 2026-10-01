@@ -152,11 +152,20 @@ export default function Menu() {
       }
     }
 
+    // Prevent page rubber-band / competing scroll while dragging wheel
+    const blockScroll = (e) => {
+      e.preventDefault()
+    }
+    root.addEventListener('touchmove', blockScroll, { passive: false })
+    root.addEventListener('wheel', blockScroll, { passive: false })
+
     root.addEventListener('click', onClick)
     root.addEventListener('keydown', onKey)
     return () => {
       root.removeEventListener('click', onClick)
       root.removeEventListener('keydown', onKey)
+      root.removeEventListener('touchmove', blockScroll)
+      root.removeEventListener('wheel', blockScroll)
     }
   }, [openIndex])
 
@@ -172,14 +181,14 @@ export default function Menu() {
           textColor="#6a6a6a"
           activeColor="#f2f2f2"
           side="left"
-          fontSize={desktop ? 4.2 : 2.1}
-          spacing={desktop ? 1.55 : 1.48}
+          fontSize={desktop ? 4.2 : 2.05}
+          spacing={desktop ? 1.55 : 1.52}
           curve={0.95}
-          tilt={desktop ? 7 : 6}
-          blur={desktop ? 2 : 1.5}
-          fade={desktop ? 0.18 : 0.14}
-          smoothing={desktop ? 160 : 220}
-          inset={desktop ? 96 : 20}
+          tilt={desktop ? 7 : 5}
+          blur={desktop ? 2 : 1.25}
+          fade={desktop ? 0.18 : 0.12}
+          smoothing={desktop ? 160 : 280}
+          inset={desktop ? 96 : 16}
           loop
           draggable
         />
