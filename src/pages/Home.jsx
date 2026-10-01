@@ -28,14 +28,21 @@ export default function Home() {
           items={items}
           preset="panorama"
           intro="rise"
-          cardWidth={248}
-          aspectRatio={0.75}
-          speed={14}
+          cardWidth={300}
+          aspectRatio={0.5625}
+          speed={20}
           captions
-          gap={7}
+          gap={6}
           tilt={0}
           perspective={1800}
-          innerShade={0.49}
+          momentum={0.57}
+          pauseOnHover={false}
+          draggable={false}
+          parallax={0}
+          stretch={0.38}
+          depthFade={0.59}
+          innerShade={0.46}
+          cornerRadius={13}
           fadeColor="#0a0a0a"
         />
       </div>

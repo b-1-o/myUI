@@ -1,59 +1,72 @@
+import { useCallback, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import ScrollStack, { ScrollStackItem } from '../components/ScrollStack'
+import InfiniteMenu from '../components/InfiniteMenu'
 
 const BASE = import.meta.env.BASE_URL
 
-/** Order matches current screenshots; last two assets removed */
 const works = [
   {
-    id: 'b1api',
-    img: `${BASE}works/2026-09-21_20-57.png`,
-    url: 'https://github.com/b-1-o',
+    image: `${BASE}works/2026-09-21_20-57.png`,
     title: 'b1api',
-    tag: 'API · Backend',
+    description: 'API · Backend',
+    site: 'https://github.com/b-1-o',
+    repo: 'https://github.com/b-1-o',
+    link: 'https://github.com/b-1-o',
   },
   {
-    id: 'my',
-    img: `${BASE}works/2026-09-26_21-49.png`,
-    url: 'https://b-1-o.github.io/my/',
+    image: `${BASE}works/2026-09-26_21-49.png`,
     title: 'my',
-    tag: 'React · Design',
+    description: 'React · Design',
+    site: 'https://b-1-o.github.io/my/',
+    repo: 'https://github.com/b-1-o/my',
+    link: 'https://b-1-o.github.io/my/',
   },
   {
-    id: 'heaven',
-    img: `${BASE}works/2026-09-27_20-46.png`,
-    url: 'https://heaven-b1o.vercel.app/',
+    image: `${BASE}works/2026-09-27_20-46.png`,
     title: 'HEAVEN',
-    tag: 'Next.js · TypeScript',
+    description: 'Next.js · TypeScript',
+    site: 'https://heaven-b1o.vercel.app/',
+    repo: 'https://github.com/b-1-o/heaven',
+    link: 'https://heaven-b1o.vercel.app/',
   },
   {
-    id: 'heaven-light',
-    img: `${BASE}works/2026-09-27_21-59.png`,
-    url: 'https://heaven-light.vercel.app/',
+    image: `${BASE}works/2026-09-27_21-59.png`,
     title: 'Heaven-light',
-    tag: 'React · UI',
+    description: 'React · UI',
+    site: 'https://heaven-light.vercel.app/',
+    repo: 'https://github.com/b-1-o/heaven',
+    link: 'https://heaven-light.vercel.app/',
   },
   {
-    id: 'nothing',
-    img: `${BASE}works/2026-09-30_19-10.png`,
-    url: 'https://b-1-o.github.io/nothing/',
+    image: `${BASE}works/2026-09-30_19-10.png`,
     title: 'nothing',
-    tag: 'React · CSS',
+    description: 'React · CSS',
+    site: 'https://b-1-o.github.io/nothing/',
+    repo: 'https://github.com/b-1-o/nothing',
+    link: 'https://b-1-o.github.io/nothing/',
   },
   {
-    id: 'portfolio',
-    img: `${BASE}works/2026-09-30_19-11.png`,
-    url: 'https://b-1-o.github.io/portfolio/',
+    image: `${BASE}works/2026-09-30_19-11.png`,
     title: 'portfolio',
-    tag: 'React · Vite',
+    description: 'React · Vite',
+    site: 'https://b-1-o.github.io/portfolio/',
+    repo: 'https://github.com/b-1-o/portfolio',
+    link: 'https://b-1-o.github.io/portfolio/',
   },
 ]
 
 export default function Works() {
   const navigate = useNavigate()
+  const [sheet, setSheet] = useState(null)
+
+  const onAction = useCallback((item) => {
+    setSheet(item)
+  }, [])
+
+  const close = () => setSheet(null)
 
   return (
-    <main className="page page-works page-works--stack">
+    <main className="page page-works page-works--infinite">
       <header className="page-header page-header--over">
         <button type="button" className="back-btn" onClick={() => navigate('/menu')}>
           ← Menu
@@ -61,38 +74,45 @@ export default function Works() {
         <span className="page-tag">Selected works</span>
       </header>
 
-      <div className="works-stack">
-        <ScrollStack
-          itemDistance={100}
-          itemScale={0.03}
-          itemStackDistance={32}
-          stackPosition="16%"
-          scaleEndPosition="8%"
-          baseScale={0.9}
-          rotationAmount={0}
-          blurAmount={0.6}
-        >
-          {works.map((w) => (
-            <ScrollStackItem key={w.id} itemClassName="work-card">
-              <a className="work-card__link" href={w.url} target="_blank" rel="noopener noreferrer">
-                <div className="work-card__frame">
-                  <img
-                    className="work-card__img"
-                    src={w.img}
-                    alt={`${w.title} screenshot`}
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </div>
-                <div className="work-card__meta">
-                  <h2>{w.title}</h2>
-                  <span>{w.tag}</span>
-                </div>
-              </a>
-            </ScrollStackItem>
-          ))}
-        </ScrollStack>
+      <div className="works-infinite">
+        <InfiniteMenu items={works} scale={0.85} backgroundColor="#0a0a0a" onAction={onAction} />
       </div>
+
+      {sheet && (
+        <div className="works-sheet" role="dialog" aria-modal="true" aria-label={sheet.title}>
+          <button type="button" className="works-sheet__backdrop" onClick={close} aria-label="Close" />
+          <div className="works-sheet__panel">
+            <p className="works-sheet__kicker">Open project</p>
+            <h2 className="works-sheet__title">{sheet.title}</h2>
+            <p className="works-sheet__desc">{sheet.description}</p>
+            <div className="works-sheet__actions">
+              {sheet.site && (
+                <a
+                  className="works-sheet__btn works-sheet__btn--primary"
+                  href={sheet.site}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Live project →
+                </a>
+              )}
+              {sheet.repo && (
+                <a
+                  className="works-sheet__btn"
+                  href={sheet.repo}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Repository →
+                </a>
+              )}
+              <button type="button" className="works-sheet__btn works-sheet__btn--ghost" onClick={close}>
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   )
 }

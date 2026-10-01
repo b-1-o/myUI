@@ -36,8 +36,6 @@ jobs:
           curl -fsSL "$BASE_COMP/CircularCarousel/CircularCarousel.css" -o src/components/CircularCarousel.css
           curl -fsSL "$BASE_COMP/OptionWheel/OptionWheel.jsx" -o src/components/OptionWheel.jsx
           curl -fsSL "$BASE_COMP/OptionWheel/OptionWheel.css" -o src/components/OptionWheel.css
-          curl -fsSL "$BASE_COMP/ScrollStack/ScrollStack.jsx" -o src/components/ScrollStack.jsx
-          curl -fsSL "$BASE_COMP/ScrollStack/ScrollStack.css" -o src/components/ScrollStack.css
           curl -fsSL "$BASE_BG/PatternWaves/PatternWaves.jsx" -o src/components/PatternWaves.jsx
           curl -fsSL "$BASE_BG/PatternWaves/PatternWaves.css" -o src/components/PatternWaves.css
           sed -i 's/object-fit: cover;/object-fit: cover; filter: grayscale(1) contrast(1.06);/' src/components/CircularCarousel.css || true
