@@ -15,4 +15,11 @@ if "will-change: transform" not in Path('src/components/CircularCarousel.css').r
             '.circular-carousel__card {\n  will-change: transform;\n',
         )
         css.write_text(t)
+
+# Promote the transforms that move every frame without changing carousel behavior.
+css = Path('src/components/CircularCarousel.css')
+t = css.read_text()
+if '.circular-carousel__camera,' not in t:
+    t += '\n.circular-carousel__camera,\n.circular-carousel__ring,\n.circular-carousel__card {\n  will-change: transform;\n  backface-visibility: hidden;\n  -webkit-backface-visibility: hidden;\n}\n'
+    css.write_text(t)
 print('carousel patch ok')
