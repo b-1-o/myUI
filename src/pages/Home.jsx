@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import CircularCarousel from '../components/CircularCarousel'
 import HoldButton from '../components/HoldButton'
+import '../home-mobile.css'
 
 const photo = (id) =>
   `https://images.unsplash.com/${id}?w=700&q=70&auto=format&fit=max&sat=-100`
@@ -56,7 +57,7 @@ export default function Home() {
 
   return (
     <main className="page page-home">
-      <div className="home-carousel" aria-hidden={false}>
+      <div className="home-carousel">
         <CircularCarousel
           items={items}
           preset="panorama"

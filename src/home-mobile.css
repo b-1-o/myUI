@@ -1,0 +1,36 @@
+/* Home viewport / phone polish — keeps carousel effects */
+.home-carousel {
+  contain: layout paint;
+  transform: translateZ(0);
+}
+
+.page-home {
+  height: 100%;
+  min-height: 100dvh;
+  overflow: hidden;
+}
+
+.home-center {
+  padding-bottom: max(24px, env(safe-area-inset-bottom, 0px));
+}
+
+@media (max-width: 640px) {
+  .page-home {
+    height: 100dvh;
+    height: 100svh;
+  }
+
+  .home-center {
+    padding: 16px;
+    padding-bottom: max(20px, env(safe-area-inset-bottom, 0px));
+  }
+
+  .home-kicker {
+    font-size: 11px;
+  }
+
+  .home-hint {
+    font-size: 11px;
+    margin-top: 16px;
+  }
+}
