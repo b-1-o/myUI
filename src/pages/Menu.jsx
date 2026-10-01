@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import OptionWheel from '../components/OptionWheel'
 
@@ -19,79 +19,73 @@ const LABELS = LINKS.map((l) => l.label)
 
 export default function Menu() {
   const navigate = useNavigate()
-  const [selected, setSelected] = useState(0)
 
-  const onChange = useCallback((index) => {
-    setSelected(index)
-  }, [])
+  const openIndex = useCallback(
+    (index) => {
+      const item = LINKS[index]
+      if (!item) return
+      if (item.action === 'route') navigate(item.to)
+      else if (item.href) {
+        window.open(item.href, item.href.startsWith('mailto:') ? '_self' : '_blank', 'noopener')
+      }
+    },
+    [navigate]
+  )
 
-  const go = useCallback(() => {
-    const item = LINKS[selected]
-    if (!item) return
-    if (item.action === 'route') navigate(item.to)
-    else if (item.href) window.open(item.href, item.href.startsWith('mailto:') ? '_self' : '_blank', 'noopener')
-  }, [navigate, selected])
+  useEffect(() => {
+    const root = document.querySelector('.option-wheel')
+    if (!root) return undefined
+
+    const onClick = (e) => {
+      const el = e.target.closest?.('.option-wheel__item')
+      if (!el || !root.contains(el)) return
+      const items = [...root.querySelectorAll('.option-wheel__item')]
+      const index = items.indexOf(el)
+      if (index >= 0) {
+        window.setTimeout(() => openIndex(index), 40)
+      }
+    }
+
+    const onKey = (e) => {
+      if (e.key !== 'Enter' && e.key !== ' ') return
+      const selected = root.querySelector('.option-wheel__item--selected')
+      if (!selected) return
+      const items = [...root.querySelectorAll('.option-wheel__item')]
+      const index = items.indexOf(selected)
+      if (index >= 0) {
+        e.preventDefault()
+        openIndex(index)
+      }
+    }
+
+    root.addEventListener('click', onClick)
+    root.addEventListener('keydown', onKey)
+    return () => {
+      root.removeEventListener('click', onClick)
+      root.removeEventListener('keydown', onKey)
+    }
+  }, [openIndex])
 
   return (
-    <main className="page page-menu">
-      <header className="page-header">
-        <button type="button" className="back-btn" onClick={() => navigate('/')}>
-          ← Home
-        </button>
-        <span className="page-tag">Navigate</span>
-      </header>
-
-      <div className="menu-layout">
-        <div className="menu-wheel">
-          <OptionWheel
-            items={LABELS}
-            defaultSelected={0}
-            textColor="#6a6a6a"
-            activeColor="#f2f2f2"
-            side="left"
-            fontSize={2.6}
-            spacing={1.35}
-            curve={0.95}
-            tilt={8}
-            blur={2}
-            fade={0.22}
-            smoothing={180}
-            inset={48}
-            loop
-            draggable
-            onChange={onChange}
-          />
-        </div>
-
-        <div className="menu-panel">
-          <p className="menu-index">{String(selected + 1).padStart(2, '0')} / {String(LABELS.length).padStart(2, '0')}</p>
-          <h2 className="menu-selected">{LINKS[selected]?.label}</h2>
-          <p className="menu-desc">
-            {LINKS[selected]?.action === 'route'
-              ? 'Open this section of the site.'
-              : 'Opens in a new tab or mail client.'}
-          </p>
-          <button type="button" className="menu-go" onClick={go}>
-            Open →
-          </button>
-          <ul className="menu-quick">
-            {LINKS.slice(0, 6).map((l, i) => (
-              <li key={l.label}>
-                <button
-                  type="button"
-                  className={i === selected ? 'is-active' : ''}
-                  onClick={() => {
-                    setSelected(i)
-                    if (l.action === 'route') navigate(l.to)
-                    else if (l.href) window.open(l.href, l.href.startsWith('mailto:') ? '_self' : '_blank', 'noopener')
-                  }}
-                >
-                  {l.label}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
+    <main className="page page-menu page-menu--wheel">
+      <div className="menu-wheel-only">
+        <OptionWheel
+          items={LABELS}
+          defaultSelected={0}
+          textColor="#6a6a6a"
+          activeColor="#f2f2f2"
+          side="left"
+          fontSize={2.8}
+          spacing={1.4}
+          curve={0.95}
+          tilt={8}
+          blur={2}
+          fade={0.22}
+          smoothing={180}
+          inset={56}
+          loop
+          draggable
+        />
       </div>
     </main>
   )
