@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import OptionWheel from '../components/OptionWheel'
 
@@ -17,8 +17,23 @@ const LINKS = [
 
 const LABELS = LINKS.map((l) => l.label)
 
+function useIsDesktop() {
+  const [desktop, setDesktop] = useState(
+    typeof window !== 'undefined' ? window.matchMedia('(min-width: 900px)').matches : true
+  )
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 900px)')
+    const on = () => setDesktop(mq.matches)
+    on()
+    mq.addEventListener?.('change', on)
+    return () => mq.removeEventListener?.('change', on)
+  }, [])
+  return desktop
+}
+
 export default function Menu() {
   const navigate = useNavigate()
+  const desktop = useIsDesktop()
 
   const openIndex = useCallback(
     (index) => {
@@ -41,9 +56,7 @@ export default function Menu() {
       if (!el || !root.contains(el)) return
       const items = [...root.querySelectorAll('.option-wheel__item')]
       const index = items.indexOf(el)
-      if (index >= 0) {
-        window.setTimeout(() => openIndex(index), 40)
-      }
+      if (index >= 0) window.setTimeout(() => openIndex(index), 40)
     }
 
     const onKey = (e) => {
@@ -75,14 +88,14 @@ export default function Menu() {
           textColor="#6a6a6a"
           activeColor="#f2f2f2"
           side="left"
-          fontSize={2.8}
-          spacing={1.4}
+          fontSize={desktop ? 4.2 : 2.6}
+          spacing={desktop ? 1.55 : 1.35}
           curve={0.95}
-          tilt={8}
+          tilt={desktop ? 7 : 8}
           blur={2}
-          fade={0.22}
-          smoothing={180}
-          inset={56}
+          fade={0.2}
+          smoothing={200}
+          inset={desktop ? 96 : 40}
           loop
           draggable
         />

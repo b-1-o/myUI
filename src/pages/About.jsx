@@ -25,12 +25,16 @@ export default function About() {
           fade="edges"
           interactive
           cursorSize={50}
-          cursorStrength={0.4}
-          depth={0.55}
-          contrast={1.1}
+          cursorStrength={0.45}
+          markSize={0.75}
+          depth={0.6}
+          shine={0.2}
+          contrast={1}
+          scale={0.95}
           direction={35}
-          speed={0.28}
-          opacity={0.85}
+          fadeSize={0.75}
+          speed={0.32}
+          opacity={0.9}
         />
       </div>
 
