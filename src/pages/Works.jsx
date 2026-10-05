@@ -1,59 +1,9 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import InfiniteMenu from '../components/InfiniteMenu'
+import autoWorks from '../works.auto.json'
 
 const BASE = import.meta.env.BASE_URL
-
-const works = [
-  {
-    image: `${BASE}icons/b1api.svg`,
-    title: 'b1api',
-    description: 'API · Backend',
-    site: 'https://github.com/b-1-o',
-    repo: 'https://github.com/b-1-o',
-    link: 'https://github.com/b-1-o',
-  },
-  {
-    image: `${BASE}icons/my.svg`,
-    title: 'my',
-    description: 'React · Design',
-    site: 'https://b-1-o.github.io/my/',
-    repo: 'https://github.com/b-1-o/my',
-    link: 'https://b-1-o.github.io/my/',
-  },
-  {
-    image: `${BASE}icons/heaven.svg`,
-    title: 'HEAVEN',
-    description: 'Next.js · TypeScript',
-    site: 'https://heaven-b1o.vercel.app/',
-    repo: 'https://github.com/b-1-o/heaven',
-    link: 'https://heaven-b1o.vercel.app/',
-  },
-  {
-    image: `${BASE}icons/ascii.svg`,
-    title: 'ascii',
-    description: 'Art · Terminal',
-    site: 'https://b-1-o.github.io/ascii/',
-    repo: 'https://github.com/b-1-o/ascii',
-    link: 'https://b-1-o.github.io/ascii/',
-  },
-  {
-    image: `${BASE}icons/nothing.svg`,
-    title: 'nothing',
-    description: 'React · CSS',
-    site: 'https://b-1-o.github.io/nothing/',
-    repo: 'https://github.com/b-1-o/nothing',
-    link: 'https://b-1-o.github.io/nothing/',
-  },
-  {
-    image: `${BASE}icons/portfolio.svg`,
-    title: 'portfolio',
-    description: 'React · Vite',
-    site: 'https://b-1-o.github.io/portfolio/',
-    repo: 'https://github.com/b-1-o/portfolio',
-    link: 'https://b-1-o.github.io/portfolio/',
-  },
-]
 
 function useIsMobile() {
   const [mobile, setMobile] = useState(() =>
@@ -74,6 +24,17 @@ export default function Works() {
   const mobile = useIsMobile()
   const [sheet, setSheet] = useState(null)
   const [ready, setReady] = useState(false)
+
+  const works = useMemo(
+    () =>
+      (Array.isArray(autoWorks) ? autoWorks : []).map((w) => ({
+        ...w,
+        image: w.image?.startsWith('http') || w.image?.startsWith('data:')
+          ? w.image
+          : `${BASE}${w.image.replace(/^\//, '')}`,
+      })),
+    []
+  )
 
   useEffect(() => {
     const id = window.setTimeout(() => setReady(true), mobile ? 80 : 0)
@@ -102,7 +63,7 @@ export default function Works() {
       </header>
 
       <div className="works-infinite">
-        {ready && (
+        {ready && works.length > 0 && (
           <InfiniteMenu items={works} scale={scale} backgroundColor="transparent" onAction={onAction} />
         )}
       </div>
