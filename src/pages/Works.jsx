@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import InfiniteMenu from '../components/InfiniteMenu'
 import autoWorks from '../works.auto.json'
+import { fetchLiveWorks } from '../githubWorks'
 
 const BASE = import.meta.env.BASE_URL
 
@@ -24,17 +25,27 @@ export default function Works() {
   const mobile = useIsMobile()
   const [sheet, setSheet] = useState(null)
   const [ready, setReady] = useState(false)
+  const [works, setWorks] = useState(() => (Array.isArray(autoWorks) ? autoWorks : []))
 
-  const works = useMemo(
-    () =>
-      (Array.isArray(autoWorks) ? autoWorks : []).map((w) => ({
-        ...w,
-        image: w.image?.startsWith('http') || w.image?.startsWith('data:')
-          ? w.image
-          : `${BASE}${w.image.replace(/^\//, '')}`,
-      })),
-    []
+  const renderedWorks = useMemo(
+    () => works.map((w) => ({
+      ...w,
+      image: w.image?.startsWith('http') || w.image?.startsWith('data:')
+        ? w.image
+        : `${BASE}${w.image.replace(/^\//, '')}`,
+    })),
+    [works]
   )
+
+  useEffect(() => {
+    const controller = new AbortController()
+    fetchLiveWorks(controller.signal)
+      .then(setWorks)
+      .catch((error) => {
+        if (error?.name !== 'AbortError') console.warn('Using cached works catalog:', error)
+      })
+    return () => controller.abort()
+  }, [])
 
   useEffect(() => {
     const id = window.setTimeout(() => setReady(true), mobile ? 80 : 0)
@@ -63,8 +74,8 @@ export default function Works() {
       </header>
 
       <div className="works-infinite">
-        {ready && works.length > 0 && (
-          <InfiniteMenu items={works} scale={scale} backgroundColor="transparent" onAction={onAction} />
+        {ready && renderedWorks.length > 0 && (
+          <InfiniteMenu items={renderedWorks} scale={scale} backgroundColor="transparent" onAction={onAction} />
         )}
       </div>
 
