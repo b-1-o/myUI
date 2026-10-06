@@ -1,18 +1,13 @@
 # myUI
 
-![Preview](./assets/preview.jpeg)
 
 A personal frontend playground and portfolio — a space for experimenting with layouts, typography, motion, and micro-interactions. Ideas that start here often end up in real projects.
 
 ## Live Demo
- [b-1-o.github.io/myUI](https://b-1-o.github.io/myUI/)
+[b-1-o.github.io/myUI](https://b-1-o.github.io/myUI/)
 
 ![Preview](./assets/preview.jpeg)
 
-## Preview
-![Preview](./assets/preview.jpeg)
-
-![Demo](./assets/demo.gif) *(GIF will be added)*
 
 ## What is this
 myUI is not a product — it's a workbench. It's where I test interface ideas before they land in production work: layout rhythm, hover states, transitions, typography experiments, and small interaction details that are hard to justify in a client project but matter for the craft.
