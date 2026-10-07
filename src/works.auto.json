@@ -2,18 +2,10 @@
   {
     "image": "icons/jobrain.svg",
     "title": "JoBrain",
-    "description": "GitHub · Project",
-    "site": null,
-    "repo": "https://github.com/b-1-o/JoBrain",
-    "link": "https://github.com/b-1-o/JoBrain"
-  },
-  {
-    "image": "icons/heaven.svg",
-    "title": "HEAVEN",
     "description": "TypeScript",
-    "site": "https://b-1-o.github.io/heaven/",
-    "repo": "https://github.com/b-1-o/heaven",
-    "link": "https://b-1-o.github.io/heaven/"
+    "site": "https://jobrain.vercel.app",
+    "repo": "https://github.com/b-1-o/JoBrain",
+    "link": "https://jobrain.vercel.app"
   },
   {
     "image": "icons/autofill.svg",
@@ -22,6 +14,14 @@
     "site": null,
     "repo": "https://github.com/b-1-o/autofill",
     "link": "https://github.com/b-1-o/autofill"
+  },
+  {
+    "image": "icons/heaven.svg",
+    "title": "HEAVEN",
+    "description": "TypeScript",
+    "site": "https://b-1-o.github.io/heaven/",
+    "repo": "https://github.com/b-1-o/heaven",
+    "link": "https://b-1-o.github.io/heaven/"
   },
   {
     "image": "icons/ai.svg",
