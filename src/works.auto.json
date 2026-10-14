@@ -1,5 +1,13 @@
 [
   {
+    "image": "icons/cloud-project.svg",
+    "title": "cloud-project",
+    "description": "TypeScript",
+    "site": null,
+    "repo": "https://github.com/b-1-o/cloud-project",
+    "link": "https://github.com/b-1-o/cloud-project"
+  },
+  {
     "image": "icons/selfmusic.svg",
     "title": "selfmusic",
     "description": "JavaScript",
