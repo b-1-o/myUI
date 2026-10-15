@@ -2,10 +2,10 @@
   {
     "image": "icons/cloud-project.svg",
     "title": "cloud-project",
-    "description": "TypeScript",
-    "site": null,
+    "description": "CollabDocs - real time document workspace",
+    "site": "https://collab-docs-4tb.pages.dev/",
     "repo": "https://github.com/b-1-o/cloud-project",
-    "link": "https://github.com/b-1-o/cloud-project"
+    "link": "https://collab-docs-4tb.pages.dev/"
   },
   {
     "image": "icons/selfmusic.svg",
