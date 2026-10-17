@@ -75,7 +75,7 @@ export default function Works() {
 
       <div className="works-infinite">
         {ready && renderedWorks.length > 0 && (
-          <InfiniteMenu items={renderedWorks} count={mobile ? 96 : 144} zoom={scale} backgroundColor="transparent" onItemClick={onAction} />
+          <InfiniteMenu items={renderedWorks} scale={scale} backgroundColor="transparent" onAction={onAction} />
         )}
       </div>
 

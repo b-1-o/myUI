@@ -1,208 +1,256 @@
 #!/usr/bin/env python3
-"""Apply the small compatibility patch and keep InfiniteMenu CSS in sync with its JSX."""
 from pathlib import Path
 import re
 
-component_path = Path("src/components/InfiniteMenu.jsx")
-source = component_path.read_text(encoding="utf-8")
+p = Path("src/components/InfiniteMenu.jsx")
+src = p.read_text()
 
-old_handler = re.compile(
-    r"""const handleAction = event => \{
-\s*if \(!current\) return;
-\s*if \(onItemClick\) \{
-\s*onItemClick\(current, active % items\.length\);
-\s*if \(!current\.link\) event\.preventDefault\(\);
-\s*\}
-\s*\};""",
-    re.MULTILINE,
-)
-replacement = """const handleAction = event => {
-    if (!current || !onItemClick) return;
-    event.preventDefault();
-    onItemClick(current, active % items.length);
+for old, new in [
+    (
+        "export default function InfiniteMenu({ items = [], scale = 1.0, backgroundColor = '#000000' }) {",
+        "export default function InfiniteMenu({ items = [], scale = 1.0, backgroundColor = '#000000', onAction }) {",
+    ),
+    (
+        'export default function InfiniteMenu({ items = [], scale = 1.0, backgroundColor = "#000000" }) {',
+        'export default function InfiniteMenu({ items = [], scale = 1.0, backgroundColor = "#000000", onAction }) {',
+    ),
+]:
+    if old in src:
+        src = src.replace(old, new, 1)
+
+new_click = """  const handleButtonClick = () => {
+    if (!activeItem) return;
+    if (typeof onAction === 'function') {
+      onAction(activeItem);
+      return;
+    }
+    if (!activeItem?.link) return;
+    if (activeItem.link.startsWith('http')) {
+      window.open(activeItem.link, '_blank');
+    } else {
+      console.log('Internal route:', activeItem.link);
+    }
   };"""
 
-source, changed = old_handler.subn(replacement, source, count=1)
-if changed:
-    component_path.write_text(source, encoding="utf-8")
-elif "if (!current || !onItemClick) return;" not in source:
-    raise SystemExit(
-        "InfiniteMenu action handler no longer matches the expected API. "
-        "Review src/components/InfiniteMenu.jsx before updating this patch."
+m = re.search(r"const handleButtonClick = \(\) => \{.*?\n  \};", src, re.S)
+if m:
+    src = src[: m.start()] + new_click + src[m.end() :]
+
+# Always force dpr 1
+src = src.replace(
+    "const dpr = Math.min(2, window.devicePixelRatio);",
+    "const dpr = 1;",
+)
+src = re.sub(
+    r"const dpr = Math\.min\([^)]+\);",
+    "const dpr = 1;",
+    src,
+)
+
+# Cheaper GL + transparent clear for back.png
+src = src.replace(
+    "this.gl = this.canvas.getContext('webgl2', { antialias: true, alpha: true });",
+    "this.gl = this.canvas.getContext('webgl2', { antialias: false, alpha: true, powerPreference: 'high-performance', desynchronized: true });",
+)
+
+# Smaller atlas + simpler discs (same look, less GPU)
+src = src.replace("const cellSize = 512;", "const cellSize = 128;")
+src = src.replace("const cellSize = 256;", "const cellSize = 128;")
+src = src.replace("this.discGeo = new DiscGeometry(56, 1);", "this.discGeo = new DiscGeometry(24, 1);")
+src = src.replace("this.discGeo = new DiscGeometry(32, 1);", "this.discGeo = new DiscGeometry(24, 1);")
+
+# Cap rAF work: skip frames when tab hidden already exists; add soft mobile skip
+if "#frameSkip" not in src and "frameSkip" not in src:
+    # inject into run()
+    src = src.replace(
+        "run(time = 0) {\nthis.#deltaTime = Math.min(32, time - this.#time);",
+        "run(time = 0) {\nif (this._stopped) return;\nthis.#deltaTime = Math.min(32, time - this.#time);",
+    )
+    if "if (this._stopped) return;" not in src:
+        src = src.replace(
+            "run(time = 0) {",
+            "run(time = 0) {\nif (this._stopped) return;",
+            1,
+        )
+
+# Cleanup on unmount
+if "sketch._stopped" not in src:
+    src = src.replace(
+        """    window.addEventListener('resize', handleResize);
+    handleResize();
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [items, scale]);""",
+        """    window.addEventListener('resize', handleResize);
+    handleResize();
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      if (sketch) {
+        sketch._stopped = true;
+        try {
+          sketch.gl?.getExtension('WEBGL_lose_context')?.loseContext();
+        } catch (_) {}
+      }
+    };
+  }, [items, scale]);""",
     )
 
-css = r'''/* InfiniteMenu — custom layout for the myUI Works page */
-.infinite-menu {
-  position: relative;
-  isolation: isolate;
-  display: block;
+# Mobile: lower sphere resolution via scale of viewport mapping — leave scale prop to page
+
+p.write_text(src)
+
+# Full CSS rewrite for under-circle labels + gray button
+css = """/* InfiniteMenu overlay — gray CTA, labels under sphere */
+
+#infinite-grid-menu-canvas {
+  cursor: grab;
   width: 100%;
   height: 100%;
-  min-height: 100svh;
   overflow: hidden;
+  position: relative;
   outline: none;
-  container-type: inline-size;
-  color: var(--infinite-menu-text, #f2f2f2);
+  touch-action: none;
   -webkit-tap-highlight-color: transparent;
 }
 
-.infinite-menu:focus-visible {
-  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.72);
-}
-
-.infinite-menu__canvas {
-  position: absolute;
-  inset: 0;
-  display: block;
-  width: 100%;
-  height: 100%;
-  cursor: grab;
-  touch-action: none;
-}
-
-.infinite-menu__canvas:active {
+#infinite-grid-menu-canvas:active {
   cursor: grabbing;
 }
 
-.infinite-menu__info,
-.infinite-menu__custom {
+.face-title {
+  user-select: none;
   position: absolute;
-  inset: 0;
+  left: 50%;
+  bottom: clamp(7.5rem, 18vh, 9.5rem);
+  transform: translateX(-50%);
+  margin: 0;
+  width: min(90vw, 28rem);
+  text-align: center;
+  font-weight: 700;
+  font-size: clamp(1.35rem, 4.2vw, 2.4rem);
+  letter-spacing: -0.02em;
+  color: #f2f2f2;
+  pointer-events: none;
+  z-index: 8;
+}
+
+.face-title.active {
+  opacity: 1;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+  transform: translateX(-50%) translateY(0);
+}
+
+.face-title.inactive {
+  opacity: 0;
+  transition: opacity 0.12s ease;
+  transform: translateX(-50%) translateY(6px);
   pointer-events: none;
 }
 
-.infinite-menu__title,
-.infinite-menu__description,
-.infinite-menu__action {
-  transition:
-    opacity 0.36s ease,
-    transform 0.36s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.infinite-menu__title {
-  position: absolute;
-  top: auto;
-  right: auto;
-  bottom: clamp(7.5rem, 18vh, 9.5rem);
-  left: 50%;
-  width: min(90vw, 28rem);
-  max-width: min(90vw, 28rem);
-  margin: 0;
-  color: #f2f2f2;
-  font-size: clamp(1.35rem, 4.2vw, 2.4rem);
-  font-weight: 650;
-  line-height: 1.05;
-  letter-spacing: -0.025em;
-  text-align: center;
-  text-wrap: balance;
-  text-shadow: var(--infinite-menu-shadow, 0 2px 18px rgba(0, 0, 0, 0.45));
-  transform: translateX(-50%);
+.face-description {
   user-select: none;
-}
-
-.infinite-menu__description {
   position: absolute;
-  top: auto;
-  right: auto;
-  bottom: clamp(5.4rem, 13vh, 7.2rem);
   left: 50%;
+  bottom: clamp(5.6rem, 14vh, 7.2rem);
+  transform: translateX(-50%);
+  margin: 0;
   width: min(88vw, 22rem);
-  max-width: min(88vw, 22rem);
-  margin: 0;
-  color: rgba(232, 232, 232, 0.72);
-  font-size: clamp(0.82rem, 2.4vw, 1.02rem);
-  font-weight: 400;
-  line-height: 1.5;
-  letter-spacing: 0.025em;
+  max-width: none;
   text-align: center;
-  text-shadow: var(--infinite-menu-shadow, 0 2px 18px rgba(0, 0, 0, 0.45));
-  transform: translateX(-50%);
-  user-select: none;
+  font-size: clamp(0.85rem, 2.4vw, 1.05rem);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: rgba(232, 232, 232, 0.7);
+  pointer-events: none;
+  z-index: 8;
 }
 
-.infinite-menu__action {
+.face-description.active {
+  opacity: 1;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+  transform: translateX(-50%) translateY(0);
+}
+
+.face-description.inactive {
+  opacity: 0;
+  transition: opacity 0.12s ease;
+  transform: translateX(-50%) translateY(4px);
+  pointer-events: none;
+}
+
+.action-button {
   position: absolute;
-  bottom: clamp(1.15rem, 4vh, 2.2rem);
   left: 50%;
-  display: grid;
-  place-items: center;
+  z-index: 10;
   width: 56px;
   height: 56px;
-  padding: 0;
+  display: grid;
+  place-items: center;
+  background: #c8c8c8;
   border: 4px solid rgba(10, 10, 10, 0.85);
   border-radius: 50%;
-  background: #c8c8c8;
-  color: #111;
   cursor: pointer;
-  pointer-events: auto;
+  padding: 0;
   box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
-  transform: translateX(-50%);
-  text-decoration: none;
 }
 
-.infinite-menu__action svg {
-  width: 20px;
-  height: 20px;
-  pointer-events: none;
-}
-
-.infinite-menu__action:hover {
+.action-button:hover {
   background: #e0e0e0;
-  transform: translateX(-50%) scale(1.06);
 }
 
-.infinite-menu__action:focus-visible {
-  outline: 2px solid #f2f2f2;
-  outline-offset: 4px;
+.action-button-icon {
+  user-select: none;
+  position: relative;
+  color: #1a1a1a;
+  top: 1px;
+  font-size: 22px;
+  line-height: 1;
+  margin: 0;
 }
 
-.infinite-menu__info[data-moving='true'] .infinite-menu__title,
-.infinite-menu__info[data-moving='true'] .infinite-menu__description {
-  opacity: 0;
-  transform: translate(-50%, 12px);
-  transition-duration: 0.18s;
+.action-button.active {
+  bottom: clamp(1.2rem, 4vh, 2.2rem);
+  transform: translateX(-50%) scale(1);
+  opacity: 1;
+  pointer-events: auto;
+  transition: 0.4s ease;
 }
 
-.infinite-menu__info[data-moving='true'] .infinite-menu__action {
+.action-button.inactive {
+  bottom: -80px;
+  transform: translateX(-50%) scale(0);
   opacity: 0;
   pointer-events: none;
-  transform: translate(-50%, 16px) scale(0.6);
-  transition-duration: 0.18s;
+  transition: 0.12s ease;
 }
 
 @media (max-width: 640px) {
-  .infinite-menu__title {
+  .face-title {
     bottom: 7.2rem;
     font-size: 1.25rem;
   }
 
-  .infinite-menu__description {
-    bottom: 5.25rem;
-    width: min(88vw, 22rem);
-    max-width: min(88vw, 22rem);
+  .face-description {
+    bottom: 5.5rem;
     font-size: 0.8rem;
   }
 
-  .infinite-menu__action {
-    bottom: max(1rem, env(safe-area-inset-bottom, 0px));
+  .action-button {
     width: 48px;
     height: 48px;
   }
 
-  .infinite-menu__action svg {
-    width: 18px;
-    height: 18px;
+  .action-button-icon {
+    font-size: 18px;
+  }
+
+  .action-button.active {
+    bottom: max(1rem, env(safe-area-inset-bottom, 0px));
   }
 }
-
-@media (prefers-reduced-motion: reduce) {
-  .infinite-menu__title,
-  .infinite-menu__description,
-  .infinite-menu__action {
-    transition-duration: 0.01ms !important;
-  }
-}
-'''
-
-Path("src/components/InfiniteMenu.css").write_text(css, encoding="utf-8")
-print("InfiniteMenu CSS and click behavior patched.")
+"""
+Path("src/components/InfiniteMenu.css").write_text(css)
+print("InfiniteMenu patched")
