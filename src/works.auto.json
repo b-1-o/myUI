@@ -1,13 +1,5 @@
 [
   {
-    "image": "icons/clothes-.svg",
-    "title": "clothes-",
-    "description": "CSS",
-    "site": "https://b-1-o.github.io/clothes-/",
-    "repo": "https://github.com/b-1-o/clothes-",
-    "link": "https://b-1-o.github.io/clothes-/"
-  },
-  {
     "image": "icons/cloud-project.svg",
     "title": "cloud-project",
     "description": "CollabDocs - real time document workspace",
