@@ -1,8 +1,8 @@
 [
   {
     "image": "icons/cloud-project.svg",
-    "title": "cloud-project",
-    "description": "CollabDocs - real time document workspace",
+    "title": "CollabDocs",
+    "description": "Real-time collaborative document workspace",
     "site": "https://collab-docs-4tb.pages.dev/",
     "repo": "https://github.com/b-1-o/cloud-project",
     "link": "https://collab-docs-4tb.pages.dev/"
@@ -10,7 +10,7 @@
   {
     "image": "icons/selfmusic.svg",
     "title": "selfmusic",
-    "description": "JavaScript",
+    "description": "Local music player with playlists & YouTube",
     "site": "https://b-1-o.github.io/selfmusic/",
     "repo": "https://github.com/b-1-o/selfmusic",
     "link": "https://b-1-o.github.io/selfmusic/"
@@ -18,7 +18,7 @@
   {
     "image": "icons/jobrain.svg",
     "title": "JoBrain",
-    "description": "TypeScript",
+    "description": "Job application tracker — production ready",
     "site": "https://jobrain.vercel.app",
     "repo": "https://github.com/b-1-o/JoBrain",
     "link": "https://jobrain.vercel.app"
@@ -26,7 +26,7 @@
   {
     "image": "icons/autofill.svg",
     "title": "autofill",
-    "description": "JavaScript",
+    "description": "Smart form autofill utilities",
     "site": null,
     "repo": "https://github.com/b-1-o/autofill",
     "link": "https://github.com/b-1-o/autofill"
@@ -34,7 +34,7 @@
   {
     "image": "icons/heaven.svg",
     "title": "HEAVEN",
-    "description": "TypeScript",
+    "description": "Terminal / CLI interface experiment",
     "site": "https://b-1-o.github.io/heaven/",
     "repo": "https://github.com/b-1-o/heaven",
     "link": "https://b-1-o.github.io/heaven/"
@@ -42,7 +42,7 @@
   {
     "image": "icons/ai.svg",
     "title": "AI",
-    "description": "TypeScript",
+    "description": "AI agent & interface experiments",
     "site": "https://b-1-o.github.io/AI/",
     "repo": "https://github.com/b-1-o/AI",
     "link": "https://b-1-o.github.io/AI/"
@@ -50,7 +50,7 @@
   {
     "image": "icons/coffee.svg",
     "title": "coffee",
-    "description": "TypeScript",
+    "description": "Coffee shop UI concept",
     "site": "https://b-1-o.github.io/coffee/",
     "repo": "https://github.com/b-1-o/coffee",
     "link": "https://b-1-o.github.io/coffee/"
@@ -58,7 +58,7 @@
   {
     "image": "icons/nothing.svg",
     "title": "nothing",
-    "description": "CSS",
+    "description": "Minimal mobile interface study",
     "site": "https://b-1-o.github.io/nothing/",
     "repo": "https://github.com/b-1-o/nothing",
     "link": "https://b-1-o.github.io/nothing/"
@@ -66,7 +66,7 @@
   {
     "image": "icons/music.svg",
     "title": "b1api",
-    "description": "CSS",
+    "description": "Glassmorphism music player",
     "site": "https://b-1-o.github.io/music/",
     "repo": "https://github.com/b-1-o/music",
     "link": "https://b-1-o.github.io/music/"
@@ -74,7 +74,7 @@
   {
     "image": "icons/bio.svg",
     "title": "Bio",
-    "description": "TypeScript",
+    "description": "Personal bio / backend experiments",
     "site": "https://b-1-o.github.io/Bio/",
     "repo": "https://github.com/b-1-o/Bio",
     "link": "https://b-1-o.github.io/Bio/"
@@ -82,7 +82,7 @@
   {
     "image": "icons/my.svg",
     "title": "my",
-    "description": "TypeScript",
+    "description": "Personal profile surface",
     "site": "https://b-1-o.github.io/my/",
     "repo": "https://github.com/b-1-o/my",
     "link": "https://b-1-o.github.io/my/"
