@@ -1,329 +1,208 @@
 #!/usr/bin/env python3
+"""Apply the small compatibility patch and keep InfiniteMenu CSS in sync with its JSX."""
 from pathlib import Path
 import re
 
-p = Path("src/components/InfiniteMenu.jsx")
-src = p.read_text()
+component_path = Path("src/components/InfiniteMenu.jsx")
+source = component_path.read_text(encoding="utf-8")
 
-for old, new in [
-    (
-        "export default function InfiniteMenu({ items = [], scale = 1.0, backgroundColor = '#000000' }) {",
-        "export default function InfiniteMenu({ items = [], scale = 1.0, backgroundColor = '#000000', onAction }) {",
-    ),
-    (
-        'export default function InfiniteMenu({ items = [], scale = 1.0, backgroundColor = "#000000" }) {',
-        'export default function InfiniteMenu({ items = [], scale = 1.0, backgroundColor = "#000000", onAction }) {',
-    ),
-]:
-    if old in src:
-        src = src.replace(old, new, 1)
-
-new_click = """  const handleButtonClick = () => {
-    if (!activeItem) return;
-    if (typeof onAction === 'function') {
-      onAction(activeItem);
-      return;
-    }
-    if (!activeItem?.link) return;
-    if (activeItem.link.startsWith('http')) {
-      window.open(activeItem.link, '_blank');
-    } else {
-      console.log('Internal route:', activeItem.link);
-    }
+old_handler = re.compile(
+    r"""const handleAction = event => \{
+\s*if \(!current\) return;
+\s*if \(onItemClick\) \{
+\s*onItemClick\(current, active % items\.length\);
+\s*if \(!current\.link\) event\.preventDefault\(\);
+\s*\}
+\s*\};""",
+    re.MULTILINE,
+)
+replacement = """const handleAction = event => {
+    if (!current || !onItemClick) return;
+    event.preventDefault();
+    onItemClick(current, active % items.length);
   };"""
 
-m = re.search(r"const handleButtonClick = \(\) => \{.*?\n  \};", src, re.S)
-if m:
-    src = src[: m.start()] + new_click + src[m.end() :]
-
-src = re.sub(
-    r"const dpr = Math\.min\([^)]+\);",
-    "const dpr = typeof window !== 'undefined' && window.matchMedia('(max-width: 640px)').matches ? 0.88 : 1;",
-    src,
-    count=1,
-)
-
-src = src.replace(
-    "this.gl = this.canvas.getContext('webgl2', { antialias: false, alpha: true, powerPreference: 'high-performance', desynchronized: true });",
-    "this.gl = this.canvas.getContext('webgl2', { antialias: false, alpha: true, powerPreference: 'high-performance', desynchronized: true });",
-)
-
-src = src.replace("const cellSize = 256;", "const cellSize = 256;")
-src = src.replace("const cellSize = 128;", "const cellSize = 256;")
-
-src = src.replace("this.discGeo = new DiscGeometry(28, 1);", "this.discGeo = new DiscGeometry(28, 1);")
-src = src.replace("this.discGeo = new DiscGeometry(32, 1);", "this.discGeo = new DiscGeometry(28, 1);")
-src = src.replace("this.discGeo = new DiscGeometry(24, 1);", "this.discGeo = new DiscGeometry(28, 1);")
-
-# Keep mobile animation at the browser's native frame cadence.
-# Reduce canvas resolution instead of intentionally dropping every other frame.
-
-if "sketch._stopped" not in src:
-    src = src.replace(
-        """    window.addEventListener('resize', handleResize);
-    handleResize();
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      if (sketch) {
-        sketch._stopped = true;
-        try {
-          sketch.gl?.getExtension('WEBGL_lose_context')?.loseContext();
-        } catch (_) {}
-      }
-    };
-  }, [items, scale]);""",
-        """    window.addEventListener('resize', handleResize);
-    handleResize();
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      if (sketch) {
-        sketch._stopped = true;
-        try {
-          sketch.gl?.getExtension('WEBGL_lose_context')?.loseContext();
-        } catch (_) {}
-      }
-    };
-  }, [items, scale]);""",
+source, changed = old_handler.subn(replacement, source, count=1)
+if changed:
+    component_path.write_text(source, encoding="utf-8")
+elif "if (!current || !onItemClick) return;" not in source:
+    raise SystemExit(
+        "InfiniteMenu action handler no longer matches the expected API. "
+        "Review src/components/InfiniteMenu.jsx before updating this patch."
     )
 
-if "imageSmoothingEnabled" not in src and "drawImage(img" in src:
-    src = src.replace(
-        "ctx.drawImage(img,",
-        "ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high'; ctx.drawImage(img,",
-    )
-
-
-# Reuse gl-matrix scratch storage inside the per-frame animation loop.
-# This keeps the visual math identical but removes dozens of short-lived
-# allocations every frame on mobile CPUs.
-if "_animPosition" not in src:
-    src = src.replace(
-        "    this.scaleFactor = scale;",
-        """    this.scaleFactor = scale;
-    this._animPosition = vec3.create();
-    this._animNegPosition = vec3.create();
-    this._animTranslation = mat4.create();
-    this._animTarget = mat4.create();
-    this._animScale = mat4.create();
-    this._animFinalTranslation = mat4.create();
-    this._animMatrix = mat4.create();
-    this._animOrigin = vec3.fromValues(0, 0, 0);
-    this._animUp = vec3.fromValues(0, 1, 0);
-    this._animFinalOffset = vec3.fromValues(0, 0, -this.SPHERE_RADIUS);
-    this._animScaleVector = vec3.create();""",
-        1,
-    )
-
-    start = src.find("  #animate(deltaTime) {")
-    end = src.find("\n  #render() {", start)
-    if start >= 0 and end > start:
-        animate = """  #animate(deltaTime) {
-    const gl = this.gl;
-    this.control.update(deltaTime, this.TARGET_FRAME_DURATION);
-
-    const orientation = this.control.orientation;
-    const positions = this.instancePositions;
-    const matrices = this.discInstances.matrices;
-    const position = this._animPosition;
-    const negPosition = this._animNegPosition;
-    const translation = this._animTranslation;
-    const target = this._animTarget;
-    const scaleMatrix = this._animScale;
-    const finalTranslation = this._animFinalTranslation;
-    const matrix = this._animMatrix;
-    const origin = this._animOrigin;
-    const up = this._animUp;
-    const finalOffset = this._animFinalOffset;
-    const scaleVector = this._animScaleVector;
-
-    mat4.fromTranslation(finalTranslation, finalOffset);
-
-    const scale = 0.25;
-    const SCALE_INTENSITY = 0.6;
-
-    for (let ndx = 0; ndx < positions.length; ndx++) {
-      const source = positions[ndx];
-      vec3.transformQuat(position, source, orientation);
-
-      const s = (Math.abs(position[2]) / this.SPHERE_RADIUS) * SCALE_INTENSITY + (1 - SCALE_INTENSITY);
-      const finalScale = s * scale;
-      scaleVector[0] = finalScale;
-      scaleVector[1] = finalScale;
-      scaleVector[2] = finalScale;
-
-      vec3.negate(negPosition, position);
-      mat4.fromTranslation(translation, negPosition);
-      mat4.targetTo(target, origin, position, up);
-      mat4.fromScaling(scaleMatrix, scaleVector);
-
-      mat4.multiply(matrix, translation, target);
-      mat4.multiply(matrix, matrix, scaleMatrix);
-      mat4.multiply(matrix, matrix, finalTranslation);
-      mat4.copy(matrices[ndx], matrix);
-    }
-
-    gl.bindBuffer(gl.ARRAY_BUFFER, this.discInstances.buffer);
-    gl.bufferSubData(gl.ARRAY_BUFFER, 0, this.discInstances.matricesArray);
-    gl.bindBuffer(gl.ARRAY_BUFFER, null);
-
-    this.smoothRotationVelocity = this.control.rotationVelocity;
-  }"""
-        src = src[:start] + animate + src[end:]
-
-p.write_text(src)
-
-css = Path("src/components/InfiniteMenu.css").read_text()
-# Keep CSS from previous write if already customized; always rewrite labels under sphere
-css = """/* InfiniteMenu — gray CTA, labels under sphere */
-
-#infinite-grid-menu-canvas {
-  cursor: grab;
+css = r'''/* InfiniteMenu — custom layout for the myUI Works page */
+.infinite-menu {
+  position: relative;
+  isolation: isolate;
+  display: block;
   width: 100%;
   height: 100%;
+  min-height: 100svh;
   overflow: hidden;
-  position: relative;
   outline: none;
-  touch-action: none;
+  container-type: inline-size;
+  color: var(--infinite-menu-text, #f2f2f2);
   -webkit-tap-highlight-color: transparent;
 }
 
-#infinite-grid-menu-canvas:active {
+.infinite-menu:focus-visible {
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.72);
+}
+
+.infinite-menu__canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+  touch-action: none;
+}
+
+.infinite-menu__canvas:active {
   cursor: grabbing;
 }
 
-.face-title {
-  user-select: none;
+.infinite-menu__info,
+.infinite-menu__custom {
   position: absolute;
-  left: 50%;
+  inset: 0;
+  pointer-events: none;
+}
+
+.infinite-menu__title,
+.infinite-menu__description,
+.infinite-menu__action {
+  transition:
+    opacity 0.36s ease,
+    transform 0.36s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.infinite-menu__title {
+  position: absolute;
+  top: auto;
+  right: auto;
   bottom: clamp(7.5rem, 18vh, 9.5rem);
-  transform: translateX(-50%);
-  margin: 0;
+  left: 50%;
   width: min(90vw, 28rem);
-  text-align: center;
-  font-weight: 700;
-  font-size: clamp(1.35rem, 4.2vw, 2.4rem);
-  letter-spacing: -0.02em;
-  color: #f2f2f2;
-  pointer-events: none;
-  z-index: 8;
-}
-
-.face-title.active {
-  opacity: 1;
-  transition: opacity 0.35s ease, transform 0.35s ease;
-  transform: translateX(-50%) translateY(0);
-}
-
-.face-title.inactive {
-  opacity: 0;
-  transition: opacity 0.12s ease;
-  transform: translateX(-50%) translateY(6px);
-  pointer-events: none;
-}
-
-.face-description {
-  user-select: none;
-  position: absolute;
-  left: 50%;
-  bottom: clamp(5.6rem, 14vh, 7.2rem);
-  transform: translateX(-50%);
+  max-width: min(90vw, 28rem);
   margin: 0;
-  width: min(88vw, 22rem);
-  max-width: none;
+  color: #f2f2f2;
+  font-size: clamp(1.35rem, 4.2vw, 2.4rem);
+  font-weight: 650;
+  line-height: 1.05;
+  letter-spacing: -0.025em;
   text-align: center;
-  font-size: clamp(0.85rem, 2.4vw, 1.05rem);
-  font-weight: 400;
-  letter-spacing: 0.04em;
-  color: rgba(232, 232, 232, 0.7);
-  pointer-events: none;
-  z-index: 8;
+  text-wrap: balance;
+  text-shadow: var(--infinite-menu-shadow, 0 2px 18px rgba(0, 0, 0, 0.45));
+  transform: translateX(-50%);
+  user-select: none;
 }
 
-.face-description.active {
-  opacity: 1;
-  transition: opacity 0.35s ease, transform 0.35s ease;
-  transform: translateX(-50%) translateY(0);
-}
-
-.face-description.inactive {
-  opacity: 0;
-  transition: opacity 0.12s ease;
-  transform: translateX(-50%) translateY(4px);
-  pointer-events: none;
-}
-
-.action-button {
+.infinite-menu__description {
   position: absolute;
+  top: auto;
+  right: auto;
+  bottom: clamp(5.4rem, 13vh, 7.2rem);
   left: 50%;
-  z-index: 10;
-  width: 56px;
-  height: 56px;
+  width: min(88vw, 22rem);
+  max-width: min(88vw, 22rem);
+  margin: 0;
+  color: rgba(232, 232, 232, 0.72);
+  font-size: clamp(0.82rem, 2.4vw, 1.02rem);
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0.025em;
+  text-align: center;
+  text-shadow: var(--infinite-menu-shadow, 0 2px 18px rgba(0, 0, 0, 0.45));
+  transform: translateX(-50%);
+  user-select: none;
+}
+
+.infinite-menu__action {
+  position: absolute;
+  bottom: clamp(1.15rem, 4vh, 2.2rem);
+  left: 50%;
   display: grid;
   place-items: center;
-  background: #c8c8c8;
+  width: 56px;
+  height: 56px;
+  padding: 0;
   border: 4px solid rgba(10, 10, 10, 0.85);
   border-radius: 50%;
+  background: #c8c8c8;
+  color: #111;
   cursor: pointer;
-  padding: 0;
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
-}
-
-.action-button:hover {
-  background: #e0e0e0;
-}
-
-.action-button-icon {
-  user-select: none;
-  position: relative;
-  color: #1a1a1a;
-  top: 1px;
-  font-size: 22px;
-  line-height: 1;
-  margin: 0;
-}
-
-.action-button.active {
-  bottom: clamp(1.2rem, 4vh, 2.2rem);
-  transform: translateX(-50%) scale(1);
-  opacity: 1;
   pointer-events: auto;
-  transition: 0.4s ease;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+  transform: translateX(-50%);
+  text-decoration: none;
 }
 
-.action-button.inactive {
-  bottom: -80px;
-  transform: translateX(-50%) scale(0);
+.infinite-menu__action svg {
+  width: 20px;
+  height: 20px;
+  pointer-events: none;
+}
+
+.infinite-menu__action:hover {
+  background: #e0e0e0;
+  transform: translateX(-50%) scale(1.06);
+}
+
+.infinite-menu__action:focus-visible {
+  outline: 2px solid #f2f2f2;
+  outline-offset: 4px;
+}
+
+.infinite-menu__info[data-moving='true'] .infinite-menu__title,
+.infinite-menu__info[data-moving='true'] .infinite-menu__description {
+  opacity: 0;
+  transform: translate(-50%, 12px);
+  transition-duration: 0.18s;
+}
+
+.infinite-menu__info[data-moving='true'] .infinite-menu__action {
   opacity: 0;
   pointer-events: none;
-  transition: 0.12s ease;
+  transform: translate(-50%, 16px) scale(0.6);
+  transition-duration: 0.18s;
 }
 
 @media (max-width: 640px) {
-  .face-title {
+  .infinite-menu__title {
     bottom: 7.2rem;
     font-size: 1.25rem;
   }
 
-  .face-description {
-    bottom: 5.5rem;
+  .infinite-menu__description {
+    bottom: 5.25rem;
+    width: min(88vw, 22rem);
+    max-width: min(88vw, 22rem);
     font-size: 0.8rem;
   }
 
-  .action-button {
+  .infinite-menu__action {
+    bottom: max(1rem, env(safe-area-inset-bottom, 0px));
     width: 48px;
     height: 48px;
   }
 
-  .action-button-icon {
-    font-size: 18px;
-  }
-
-  .action-button.active {
-    bottom: max(1rem, env(safe-area-inset-bottom, 0px));
+  .infinite-menu__action svg {
+    width: 18px;
+    height: 18px;
   }
 }
-"""
-Path("src/components/InfiniteMenu.css").write_text(css)
-print("InfiniteMenu patched")
+
+@media (prefers-reduced-motion: reduce) {
+  .infinite-menu__title,
+  .infinite-menu__description,
+  .infinite-menu__action {
+    transition-duration: 0.01ms !important;
+  }
+}
+'''
+
+Path("src/components/InfiniteMenu.css").write_text(css, encoding="utf-8")
+print("InfiniteMenu CSS and click behavior patched.")
