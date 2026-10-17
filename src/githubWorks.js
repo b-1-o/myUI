@@ -2,6 +2,23 @@ const OWNER = 'b-1-o';
 const EXCLUDED = new Set(['b-1-o', 'portfolio', 'myUI', 'Portfolio']);
 const DISPLAY_NAMES = { Bio: 'Bio', AI: 'AI', heaven: 'HEAVEN', music: 'b1api' };
 
+const STATIC_ICONS = {
+  'cloud-project': 'icons/cloud-project.svg',
+  selfmusic: 'icons/selfmusic.svg',
+  jobrain: 'icons/jobrain.svg',
+  JoBrain: 'icons/jobrain.svg',
+  autofill: 'icons/autofill.svg',
+  heaven: 'icons/heaven.svg',
+  AI: 'icons/ai.svg',
+  ai: 'icons/ai.svg',
+  coffee: 'icons/coffee.svg',
+  nothing: 'icons/nothing.svg',
+  music: 'icons/music.svg',
+  Bio: 'icons/bio.svg',
+  bio: 'icons/bio.svg',
+  my: 'icons/my.svg',
+};
+
 const GLYPHS = {
   music: 'M9 18V5l12-2v13M6 18a3 3 0 1 0 0-0.01M18 16a3 3 0 1 0 0-0.01',
   phone: 'M7 2h10a2.5 2.5 0 0 1 2.5 2.5v15A2.5 2.5 0 0 1 17 22H7a2.5 2.5 0 0 1-2.5-2.5v-15A2.5 2.5 0 0 1 7 2zM11 18h2',
@@ -38,6 +55,12 @@ function iconDataUrl(key) {
   return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
 }
 
+function resolveImage(repo) {
+  const key = repo.name;
+  const staticPath = STATIC_ICONS[key] || STATIC_ICONS[key.toLowerCase()];
+  return staticPath || iconDataUrl(iconKeyFor(repo));
+}
+
 export async function fetchLiveWorks(signal) {
   const repos = [];
   for (let page = 1; page <= 10; page += 1) {
@@ -54,6 +77,6 @@ export async function fetchLiveWorks(signal) {
     .map((r) => {
       const title = DISPLAY_NAMES[r.name] || r.name;
       const site = r.homepage && r.homepage.trim() ? r.homepage.trim() : (r.has_pages ? 'https://' + OWNER + '.github.io/' + r.name + '/' : null);
-      return { image: iconDataUrl(iconKeyFor(r)), title, description: r.description && r.description.trim() ? r.description.trim() : (r.language || 'GitHub project'), site, repo: r.html_url, link: site || r.html_url };
+      return { image: resolveImage(r), title, description: r.description && r.description.trim() ? r.description.trim() : (r.language || 'GitHub project'), site, repo: r.html_url, link: site || r.html_url };
     });
 }
