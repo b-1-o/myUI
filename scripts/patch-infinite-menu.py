@@ -89,10 +89,9 @@ if "sketch._stopped" not in src:
     return () => {
       window.removeEventListener('resize', handleResize);
       if (sketch) {
+        // Stop this instance's animation loop, but preserve the canvas WebGL
+        // context: this effect can rerun when the project list updates.
         sketch._stopped = true;
-        try {
-          sketch.gl?.getExtension('WEBGL_lose_context')?.loseContext();
-        } catch (_) {}
       }
     };
   }, [items, scale]);""",

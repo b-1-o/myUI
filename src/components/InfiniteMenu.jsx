@@ -952,9 +952,6 @@ export default function InfiniteMenu({ items = [], scale = 1.0, backgroundColor 
       window.removeEventListener('resize', handleResize);
       if (sketch) {
         sketch._stopped = true;
-        try {
-          sketch.gl?.getExtension('WEBGL_lose_context')?.loseContext();
-        } catch (_) {}
       }
     };
   }, [items, scale]);
