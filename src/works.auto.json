@@ -8,20 +8,20 @@
     "link": "https://collab-docs-4tb.pages.dev/"
   },
   {
+    "image": "icons/jobrain.svg",
+    "title": "JoBrain",
+    "description": "CSS",
+    "site": "https://jobrain.vercel.app",
+    "repo": "https://github.com/b-1-o/JoBrain",
+    "link": "https://jobrain.vercel.app"
+  },
+  {
     "image": "icons/selfmusic.svg",
     "title": "selfmusic",
     "description": "JavaScript",
     "site": "https://b-1-o.github.io/selfmusic/",
     "repo": "https://github.com/b-1-o/selfmusic",
     "link": "https://b-1-o.github.io/selfmusic/"
-  },
-  {
-    "image": "icons/jobrain.svg",
-    "title": "JoBrain",
-    "description": "TypeScript",
-    "site": "https://jobrain.vercel.app",
-    "repo": "https://github.com/b-1-o/JoBrain",
-    "link": "https://jobrain.vercel.app"
   },
   {
     "image": "icons/autofill.svg",
