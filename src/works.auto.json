@@ -1,5 +1,13 @@
 [
   {
+    "image": "icons/shopline.svg",
+    "title": "shopline",
+    "description": "TypeScript",
+    "site": null,
+    "repo": "https://github.com/b-1-o/shopline",
+    "link": "https://github.com/b-1-o/shopline"
+  },
+  {
     "image": "icons/cloud-project.svg",
     "title": "cloud-project",
     "description": "CollabDocs - real time document workspace",
