@@ -3,9 +3,9 @@
     "image": "icons/shopline.svg",
     "title": "shopline",
     "description": "TypeScript",
-    "site": null,
+    "site": "https://shopline-bice.vercel.app",
     "repo": "https://github.com/b-1-o/shopline",
-    "link": "https://github.com/b-1-o/shopline"
+    "link": "https://shopline-bice.vercel.app"
   },
   {
     "image": "icons/cloud-project.svg",
