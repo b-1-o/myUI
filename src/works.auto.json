@@ -1,5 +1,13 @@
 [
   {
+    "image": "icons/b1web.svg",
+    "title": "B1web",
+    "description": "CSS",
+    "site": null,
+    "repo": "https://github.com/b-1-o/B1web",
+    "link": "https://github.com/b-1-o/B1web"
+  },
+  {
     "image": "icons/bio.svg",
     "title": "Bio",
     "description": "TypeScript",
