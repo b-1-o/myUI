@@ -2,10 +2,26 @@
   {
     "image": "icons/b1web.svg",
     "title": "B1web",
-    "description": "CSS",
+    "description": "TypeScript",
     "site": null,
     "repo": "https://github.com/b-1-o/B1web",
     "link": "https://github.com/b-1-o/B1web"
+  },
+  {
+    "image": "icons/selfmusic.svg",
+    "title": "selfmusic",
+    "description": "JavaScript",
+    "site": "https://b-1-o.github.io/selfmusic/",
+    "repo": "https://github.com/b-1-o/selfmusic",
+    "link": "https://b-1-o.github.io/selfmusic/"
+  },
+  {
+    "image": "icons/jtheme.svg",
+    "title": "jtheme",
+    "description": "GitHub · Project",
+    "site": null,
+    "repo": "https://github.com/b-1-o/jtheme",
+    "link": "https://github.com/b-1-o/jtheme"
   },
   {
     "image": "icons/bio.svg",
@@ -38,14 +54,6 @@
     "site": "https://jobrain.vercel.app",
     "repo": "https://github.com/b-1-o/JoBrain",
     "link": "https://jobrain.vercel.app"
-  },
-  {
-    "image": "icons/selfmusic.svg",
-    "title": "selfmusic",
-    "description": "JavaScript",
-    "site": "https://b-1-o.github.io/selfmusic/",
-    "repo": "https://github.com/b-1-o/selfmusic",
-    "link": "https://b-1-o.github.io/selfmusic/"
   },
   {
     "image": "icons/autofill.svg",
