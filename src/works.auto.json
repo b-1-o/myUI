@@ -1,5 +1,13 @@
 [
   {
+    "image": "icons/bio.svg",
+    "title": "Bio",
+    "description": "TypeScript",
+    "site": "https://b-1-o.github.io/Bio/",
+    "repo": "https://github.com/b-1-o/Bio",
+    "link": "https://b-1-o.github.io/Bio/"
+  },
+  {
     "image": "icons/shopline.svg",
     "title": "shopline",
     "description": "CSS",
@@ -38,14 +46,6 @@
     "site": "https://b-1-o.github.io/selfmusic/",
     "repo": "https://github.com/b-1-o/selfmusic",
     "link": "https://b-1-o.github.io/selfmusic/"
-  },
-  {
-    "image": "icons/bio.svg",
-    "title": "Bio",
-    "description": "TypeScript",
-    "site": "https://b-1-o.github.io/Bio/",
-    "repo": "https://github.com/b-1-o/Bio",
-    "link": "https://b-1-o.github.io/Bio/"
   },
   {
     "image": "icons/cloud-project.svg",
