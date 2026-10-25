@@ -2,10 +2,18 @@
   {
     "image": "icons/b1web.svg",
     "title": "B1web",
-    "description": "B1O TV",
+    "description": "TypeScript",
     "site": null,
     "repo": "https://github.com/b-1-o/B1web",
     "link": "https://github.com/b-1-o/B1web"
+  },
+  {
+    "image": "icons/b1o-tv.svg",
+    "title": "B1O-TV",
+    "description": "B1O TV",
+    "site": null,
+    "repo": "https://github.com/b-1-o/B1O-TV",
+    "link": "https://github.com/b-1-o/B1O-TV"
   },
   {
     "image": "icons/bio.svg",
