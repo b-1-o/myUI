@@ -1,5 +1,13 @@
 [
   {
+    "image": "icons/b1web.svg",
+    "title": "B1web",
+    "description": "B1O TV",
+    "site": null,
+    "repo": "https://github.com/b-1-o/B1web",
+    "link": "https://github.com/b-1-o/B1web"
+  },
+  {
     "image": "icons/bio.svg",
     "title": "Bio",
     "description": "TypeScript",
@@ -30,14 +38,6 @@
     "site": "https://jobrain.vercel.app",
     "repo": "https://github.com/b-1-o/JoBrain",
     "link": "https://jobrain.vercel.app"
-  },
-  {
-    "image": "icons/b1web.svg",
-    "title": "B1web",
-    "description": "TypeScript",
-    "site": null,
-    "repo": "https://github.com/b-1-o/B1web",
-    "link": "https://github.com/b-1-o/B1web"
   },
   {
     "image": "icons/selfmusic.svg",
