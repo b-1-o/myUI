@@ -1,5 +1,13 @@
 [
   {
+    "image": "icons/b1_os.svg",
+    "title": "b1_OS",
+    "description": "Java",
+    "site": null,
+    "repo": "https://github.com/b-1-o/b1_OS",
+    "link": "https://github.com/b-1-o/b1_OS"
+  },
+  {
     "image": "icons/b1web.svg",
     "title": "B1web",
     "description": "TypeScript",
