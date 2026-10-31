@@ -1,5 +1,13 @@
 [
   {
+    "image": "icons/heaven.svg",
+    "title": "HEAVEN",
+    "description": "TypeScript",
+    "site": "https://b-1-o.github.io/heaven/",
+    "repo": "https://github.com/b-1-o/heaven",
+    "link": "https://b-1-o.github.io/heaven/"
+  },
+  {
     "image": "icons/biogram.svg",
     "title": "Biogram",
     "description": "Biogram - fork of Telegram with custom UI",
@@ -70,14 +78,6 @@
     "site": "https://collab-docs-4tb.pages.dev/",
     "repo": "https://github.com/b-1-o/cloud-project",
     "link": "https://collab-docs-4tb.pages.dev/"
-  },
-  {
-    "image": "icons/heaven.svg",
-    "title": "HEAVEN",
-    "description": "TypeScript",
-    "site": "https://b-1-o.github.io/heaven/",
-    "repo": "https://github.com/b-1-o/heaven",
-    "link": "https://b-1-o.github.io/heaven/"
   },
   {
     "image": "icons/ai.svg",
