@@ -1,19 +1,19 @@
 [
   {
-    "image": "icons/heaven.svg",
-    "title": "HEAVEN",
-    "description": "TypeScript",
-    "site": "https://b-1-o.github.io/heaven/",
-    "repo": "https://github.com/b-1-o/heaven",
-    "link": "https://b-1-o.github.io/heaven/"
-  },
-  {
     "image": "icons/biogram.svg",
     "title": "Biogram",
     "description": "Biogram - fork of Telegram with custom UI",
     "site": null,
     "repo": "https://github.com/b-1-o/Biogram",
     "link": "https://github.com/b-1-o/Biogram"
+  },
+  {
+    "image": "icons/heaven.svg",
+    "title": "HEAVEN",
+    "description": "TypeScript",
+    "site": "https://b-1-o.github.io/heaven/",
+    "repo": "https://github.com/b-1-o/heaven",
+    "link": "https://b-1-o.github.io/heaven/"
   },
   {
     "image": "icons/bio.svg",
