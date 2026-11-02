@@ -1,5 +1,13 @@
 [
   {
+    "image": "icons/userfind.svg",
+    "title": "userfind",
+    "description": "TypeScript",
+    "site": null,
+    "repo": "https://github.com/b-1-o/userfind",
+    "link": "https://github.com/b-1-o/userfind"
+  },
+  {
     "image": "icons/biogram.svg",
     "title": "Biogram",
     "description": "Biogram - fork of Telegram with custom UI",
