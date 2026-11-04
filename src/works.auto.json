@@ -1,5 +1,13 @@
 [
   {
+    "image": "icons/cloud-project.svg",
+    "title": "cloud-project",
+    "description": "CollabDocs - real time document workspace",
+    "site": "https://collab-docs-4tb.pages.dev/",
+    "repo": "https://github.com/b-1-o/cloud-project",
+    "link": "https://collab-docs-4tb.pages.dev/"
+  },
+  {
     "image": "icons/biogram.svg",
     "title": "Biogram",
     "description": "Biogram - fork of Telegram with custom UI",
@@ -78,14 +86,6 @@
     "site": "https://b-1-o.github.io/selfmusic/",
     "repo": "https://github.com/b-1-o/selfmusic",
     "link": "https://b-1-o.github.io/selfmusic/"
-  },
-  {
-    "image": "icons/cloud-project.svg",
-    "title": "cloud-project",
-    "description": "CollabDocs - real time document workspace",
-    "site": "https://collab-docs-4tb.pages.dev/",
-    "repo": "https://github.com/b-1-o/cloud-project",
-    "link": "https://collab-docs-4tb.pages.dev/"
   },
   {
     "image": "icons/ai.svg",
