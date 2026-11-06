@@ -1,5 +1,13 @@
 [
   {
+    "image": "icons/rubygram.svg",
+    "title": "Rubygram",
+    "description": "Swift",
+    "site": null,
+    "repo": "https://github.com/b-1-o/Rubygram",
+    "link": "https://github.com/b-1-o/Rubygram"
+  },
+  {
     "image": "icons/cloud-project.svg",
     "title": "cloud-project",
     "description": "Vixiny- real time document workspace",
