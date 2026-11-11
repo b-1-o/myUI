@@ -1,5 +1,13 @@
 [
   {
+    "image": "icons/b1o-tv.svg",
+    "title": "B1O-TV",
+    "description": "B1O TV",
+    "site": null,
+    "repo": "https://github.com/b-1-o/B1O-TV",
+    "link": "https://github.com/b-1-o/B1O-TV"
+  },
+  {
     "image": "icons/cloud-project.svg",
     "title": "cloud-project",
     "description": "Vixiny- real time document workspace",
@@ -38,14 +46,6 @@
     "site": "https://b1o.is-a.dev",
     "repo": "https://github.com/b-1-o/Bio",
     "link": "https://b1o.is-a.dev"
-  },
-  {
-    "image": "icons/b1o-tv.svg",
-    "title": "B1O-TV",
-    "description": "B1O TV",
-    "site": null,
-    "repo": "https://github.com/b-1-o/B1O-TV",
-    "link": "https://github.com/b-1-o/B1O-TV"
   },
   {
     "image": "icons/autofill.svg",
