@@ -24,14 +24,6 @@
     "link": "https://github.com/b-1-o/Biogram"
   },
   {
-    "image": "icons/userfind.svg",
-    "title": "userfind",
-    "description": "TypeScript",
-    "site": null,
-    "repo": "https://github.com/b-1-o/userfind",
-    "link": "https://github.com/b-1-o/userfind"
-  },
-  {
     "image": "icons/heaven.svg",
     "title": "HEAVEN",
     "description": "TypeScript",
@@ -48,28 +40,12 @@
     "link": "https://b1o.is-a.dev"
   },
   {
-    "image": "icons/saia.svg",
-    "title": "SAIA",
-    "description": "TypeScript",
-    "site": null,
-    "repo": "https://github.com/b-1-o/SAIA",
-    "link": "https://github.com/b-1-o/SAIA"
-  },
-  {
     "image": "icons/b1o-tv.svg",
     "title": "B1O-TV",
     "description": "B1O TV",
     "site": null,
     "repo": "https://github.com/b-1-o/B1O-TV",
     "link": "https://github.com/b-1-o/B1O-TV"
-  },
-  {
-    "image": "icons/shopline.svg",
-    "title": "shopline",
-    "description": "CSS",
-    "site": "https://shopline-bice.vercel.app",
-    "repo": "https://github.com/b-1-o/shopline",
-    "link": "https://shopline-bice.vercel.app"
   },
   {
     "image": "icons/autofill.svg",
