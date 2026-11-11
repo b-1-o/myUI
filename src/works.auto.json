@@ -1,19 +1,19 @@
 [
   {
-    "image": "icons/rubygram.svg",
-    "title": "Rubygram",
-    "description": "Swift",
-    "site": null,
-    "repo": "https://github.com/b-1-o/Rubygram",
-    "link": "https://github.com/b-1-o/Rubygram"
-  },
-  {
     "image": "icons/cloud-project.svg",
     "title": "cloud-project",
     "description": "Vixiny- real time document workspace",
     "site": "https://vixiny.pages.dev",
     "repo": "https://github.com/b-1-o/cloud-project",
     "link": "https://vixiny.pages.dev"
+  },
+  {
+    "image": "icons/rubygram.svg",
+    "title": "Rubygram",
+    "description": "Swift",
+    "site": null,
+    "repo": "https://github.com/b-1-o/Rubygram",
+    "link": "https://github.com/b-1-o/Rubygram"
   },
   {
     "image": "icons/biogram.svg",
