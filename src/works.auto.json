@@ -1,5 +1,13 @@
 [
   {
+    "image": "icons/tata.svg",
+    "title": "tata",
+    "description": "CSS",
+    "site": "https://b-1-o.github.io/tata/",
+    "repo": "https://github.com/b-1-o/tata",
+    "link": "https://b-1-o.github.io/tata/"
+  },
+  {
     "image": "icons/b1o-tv.svg",
     "title": "B1O-TV",
     "description": "B1O TV",
