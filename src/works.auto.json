@@ -2,10 +2,10 @@
   {
     "image": "icons/tata_bot.svg",
     "title": "tata_bot",
-    "description": "GitHub · Project",
-    "site": null,
+    "description": "HTML",
+    "site": "https://tata-course-miniapp.vercel.app",
     "repo": "https://github.com/b-1-o/tata_bot",
-    "link": "https://github.com/b-1-o/tata_bot"
+    "link": "https://tata-course-miniapp.vercel.app"
   },
   {
     "image": "icons/tata.svg",
