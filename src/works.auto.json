@@ -1,19 +1,19 @@
 [
   {
+    "image": "icons/nails.svg",
+    "title": "nails",
+    "description": "CSS",
+    "site": "https://b-1-o.github.io/nails/",
+    "repo": "https://github.com/b-1-o/nails",
+    "link": "https://b-1-o.github.io/nails/"
+  },
+  {
     "image": "icons/tata_bot.svg",
     "title": "tata_bot",
     "description": "HTML",
     "site": "https://tata-course-miniapp.vercel.app",
     "repo": "https://github.com/b-1-o/tata_bot",
     "link": "https://tata-course-miniapp.vercel.app"
-  },
-  {
-    "image": "icons/tata.svg",
-    "title": "tata",
-    "description": "CSS",
-    "site": "https://b-1-o.github.io/tata/",
-    "repo": "https://github.com/b-1-o/tata",
-    "link": "https://b-1-o.github.io/tata/"
   },
   {
     "image": "icons/b1o-tv.svg",
