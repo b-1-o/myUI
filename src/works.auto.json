@@ -1,5 +1,13 @@
 [
   {
+    "image": "icons/flowy.svg",
+    "title": "flowy",
+    "description": "TypeScript",
+    "site": "https://flowy-taupe.vercel.app",
+    "repo": "https://github.com/b-1-o/flowy",
+    "link": "https://flowy-taupe.vercel.app"
+  },
+  {
     "image": "icons/nails.svg",
     "title": "nails",
     "description": "CSS",
