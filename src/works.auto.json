@@ -1,19 +1,19 @@
 [
   {
+    "image": "icons/zhu-zhu.svg",
+    "title": "zhu-zhu",
+    "description": "CSS",
+    "site": "https://b-1-o.github.io/zhu-zhu/",
+    "repo": "https://github.com/b-1-o/zhu-zhu",
+    "link": "https://b-1-o.github.io/zhu-zhu/"
+  },
+  {
     "image": "icons/osuext.svg",
     "title": "osuext",
     "description": "JavaScript",
     "site": null,
     "repo": "https://github.com/b-1-o/osuext",
     "link": "https://github.com/b-1-o/osuext"
-  },
-  {
-    "image": "icons/flowy.svg",
-    "title": "flowy",
-    "description": "TypeScript",
-    "site": "https://flowy-taupe.vercel.app",
-    "repo": "https://github.com/b-1-o/flowy",
-    "link": "https://flowy-taupe.vercel.app"
   },
   {
     "image": "icons/nails.svg",
