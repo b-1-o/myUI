@@ -1,5 +1,13 @@
 [
   {
+    "image": "icons/osuext.svg",
+    "title": "osuext",
+    "description": "JavaScript",
+    "site": null,
+    "repo": "https://github.com/b-1-o/osuext",
+    "link": "https://github.com/b-1-o/osuext"
+  },
+  {
     "image": "icons/flowy.svg",
     "title": "flowy",
     "description": "TypeScript",
